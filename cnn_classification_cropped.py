@@ -1,9 +1,8 @@
-'''Train a simple convnet on the MNIST dataset.
+'''Train and test a simple classification for two groups of diffraction data
 
-Run on GPU: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python mnist_cnn.py
+Run on GPU: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 
 
-Get to 99.25% test accuracy after 12 epochs (there is still a lot of margin for parameter tuning).
-16 seconds per epoch on a GRID K520 GPU.
+
 '''
 
 from __future__ import print_function
