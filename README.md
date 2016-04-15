@@ -1,1 +1,1 @@
-# CNN_classification
+# Convolutional Neural Network for X-ray Science.
