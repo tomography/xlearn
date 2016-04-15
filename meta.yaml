@@ -1,0 +1,33 @@
+package:
+  name: project
+  version: '0.0.1'
+
+source:
+  git_url: https://github.com/decarlof/CNN_classification.git
+  
+build:
+  number: 0
+
+requirements:
+  build:
+    - python
+    - setuptools
+ 
+  run:
+    - python
+    - numpy
+    - scipy
+    - keras    
+    
+test:
+  # Python imports
+  imports:
+    - convnet
+    - convnet.diffraction
+    - convnet.module_01
+    - convnet.module_02
+
+about:
+  home: http://convnet.readthedocs.org
+  license: BSD-3
+  summary: 'Add docs to any project.'
