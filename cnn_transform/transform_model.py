@@ -4,7 +4,9 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.core import Dense, Reshape, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
-
+from utils import extract_patches
+from utils import reconstruct_patches
+from utils import nor_data
 
 
 def cnn_model(dim_img, nb_filters, nb_conv):
@@ -47,7 +49,20 @@ def cnn_model(dim_img, nb_filters, nb_conv):
     return model
 
 
-def cnn_prd(img, patch_size, dim_img):
+def cnn_train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, batch_size, nb_epoch):
+    img_x = nor_data(img_x)
+    img_y = nor_data(img_y)
+    img_input = extract_patches(img_x, patch_size, patch_step)
+    img_output = extract_patches(img_y, patch_size, patch_step)
+    img_input = np.reshape(img_input, (len(img_input), 1, dim_img, dim_img))
+    img_output = np.reshape(img_output, (len(img_input), 1, dim_img, dim_img))
+
+    model = cnn_model(dim_img, nb_filters, nb_conv)
+    model.fit(img_input, img_output, batch_size=batch_size, nb_epoch=nb_epoch)
+    return model
+
+
+def cnn_prd(model, img, patch_size, patch_step, batch_size, dim_img):
     """the cnn model for image transformation
       ----------
       img : array
