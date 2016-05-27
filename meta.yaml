@@ -1,5 +1,5 @@
 package:
-  name: project
+  name: convnet
   version: '0.0.1'
 
 source:
