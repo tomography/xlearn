@@ -1,17 +1,78 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# #########################################################################
+# Copyright (c) 2015, UChicago Argonne, LLC. All rights reserved.         #
+#                                                                         #
+# Copyright 2015. UChicago Argonne, LLC. This software was produced       #
+# under U.S. Government contract DE-AC02-06CH11357 for Argonne National   #
+# Laboratory (ANL), which is operated by UChicago Argonne, LLC for the    #
+# U.S. Department of Energy. The U.S. Government has rights to use,       #
+# reproduce, and distribute this software.  NEITHER THE GOVERNMENT NOR    #
+# UChicago Argonne, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR        #
+# ASSUMES ANY LIABILITY FOR THE USE OF THIS SOFTWARE.  If software is     #
+# modified to produce derivative works, such modified software should     #
+# be clearly marked, so as not to confuse it with the version available   #
+# from ANL.                                                               #
+#                                                                         #
+# Additionally, redistribution and use in source and binary forms, with   #
+# or without modification, are permitted provided that the following      #
+# conditions are met:                                                     #
+#                                                                         #
+#     * Redistributions of source code must retain the above copyright    #
+#       notice, this list of conditions and the following disclaimer.     #
+#                                                                         #
+#     * Redistributions in binary form must reproduce the above copyright #
+#       notice, this list of conditions and the following disclaimer in   #
+#       the documentation and/or other materials provided with the        #
+#       distribution.                                                     #
+#                                                                         #
+#     * Neither the name of UChicago Argonne, LLC, Argonne National       #
+#       Laboratory, ANL, the U.S. Government, nor the names of its        #
+#       contributors may be used to endorse or promote products derived   #
+#       from this software without specific prior written permission.     #
+#                                                                         #
+# THIS SOFTWARE IS PROVIDED BY UChicago Argonne, LLC AND CONTRIBUTORS     #
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT       #
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS       #
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL UChicago     #
+# Argonne, LLC OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,        #
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,    #
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;        #
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER        #
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT      #
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN       #
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE         #
+# POSSIBILITY OF SUCH DAMAGE.                                             #
+# #########################################################################
+"""
+Module containing utility routines
+"""
+
 from __future__ import print_function
 import numpy as np
 from itertools import product
 import numbers
 from numpy.lib.stride_tricks import as_strided
 
+__authors__ = "Xiaogang Yang"
+__copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
+__version__ = "0.1.0"
+__docformat__ = "restructuredtext en"
+__all__ = ['nor_data',
+           'check_random_state',
+           'extract_patches',
+           'reconstruct_patches']
 
 
 def nor_data(img):
-    """Normalize the image
-    ----------
-    img: array
-        The images need to be normalized
     """
+    Normalize the image
+
+    Parameters    ----------    img: array
+        The images need to be normalized
+
+    Returns    -------    img        Description.    """
     mean_tmp = np.mean(img)
     std_tmp = np.std(img)
     img = (img-mean_tmp)/std_tmp
@@ -19,12 +80,14 @@ def nor_data(img):
 
 
 def check_random_state(seed):
-    """Turn seed into a np.random.RandomState instance
+    """
+    Turn seed into a np.random.RandomState instance
     If seed is None, return the RandomState singleton used by np.random.
     If seed is an int, return a new RandomState instance seeded with seed.
     If seed is already a RandomState instance, return it.
     Otherwise raise ValueError.
-    """
+
+    Parameters    ----------    seed : type        Description.    """
     if seed is None or seed is np.random:
         return np.random.mtrand._rand
     if isinstance(seed, (numbers.Integral, np.integer)):
@@ -35,23 +98,29 @@ def check_random_state(seed):
                      ' instance' % seed)
 
 def _compute_n_patches(i_h, i_w, p_h, p_w, step, max_patches=None):
-    """Compute the number of patches that will be extracted in an image.
-    Read more in the :ref:`User Guide <image_feature_extraction>`.
+    """   
+    Compute the number of patches that will be extracted in an image.
+    
     Parameters
     ----------
     i_h : int
         The image height
+
     i_w : int
         The image with
+
     p_h : int
         The height of a patch
+
     p_w : int
         The width of a patch
+
     max_patches : integer or float, optional default is None
         The maximum number of patches to extract. If max_patches is a float
         between 0 and 1, it is taken to be a proportion of the total number
         of patches.
-    """
+
+    Returns    -------    all_patches        Description.    """
     n_h = (i_h - p_h)/step + 1
     n_w = (i_w - p_w)/step + 1
     all_patches = n_h * n_w
@@ -70,24 +139,28 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, step, max_patches=None):
 
 
 def _extracting(arr, patch_shape=8, extraction_step=4):
-    """Extracts patches of any n-dimensional array in place using strides.
+    """
+    Extracts patches of any n-dimensional array in place using strides.
     Given an n-dimensional array it will return a 2n-dimensional array with
     the first n dimensions indexing patch position and the last n indexing
     the patch content. This operation is immediate (O(1)). A reshape
     performed on the first n dimensions will cause numpy to copy data, leading
     to a list of extracted patches.
-    Read more in the :ref:`User Guide <image_feature_extraction>`.
+
     Parameters
     ----------
     arr : ndarray
         n-dimensional array of which patches are to be extracted
+
     patch_shape : integer or tuple of length arr.ndim
         Indicates the shape of the patches to be extracted. If an
         integer is given, the shape will be a hypercube of
         sidelength given by its value.
+
     extraction_step : integer or tuple of length arr.ndim
         Indicates step size at which extraction shall be performed.
         If integer is given, then the step is uniform in all dimensions.
+
     Returns
     -------
     patches : strided ndarray
@@ -121,25 +194,31 @@ def _extracting(arr, patch_shape=8, extraction_step=4):
 
 
 def extract_patches(image, patch_size, step, max_patches=None, random_state=None):
-    """Reshape a 2D image into a collection of patches
+    """
+    Reshape a 2D image into a collection of patches
     The resulting patches are allocated in a dedicated array.
-    Read more in the :ref:`User Guide <image_feature_extraction>`.
+    
     Parameters
     ----------
     image : array, shape = (image_height, image_width) or
         (image_height, image_width, n_channels)
         The original image data. For color images, the last dimension specifies
         the channel: a RGB image would have `n_channels=3`.
+
     patch_size : tuple of ints (patch_height, patch_width)
         the dimensions of one patch
+
     step: number of pixels between two patches
+
     max_patches : integer or float, optional default is None
         The maximum number of patches to extract. If max_patches is a float
         between 0 and 1, it is taken to be a proportion of the total number
         of patches.
+
     random_state : int or RandomState
         Pseudo number generator state used for random sampling to use if
         `max_patches` is not None.
+
     Returns
     -------
     patches : array, shape = (n_patches, patch_height, patch_width) or
@@ -185,11 +264,12 @@ def extract_patches(image, patch_size, step, max_patches=None, random_state=None
 
 
 def reconstruct_patches(patches, image_size, step):
-    """Reconstruct the image from all of its patches.
+    """
+    Reconstruct the image from all of its patches.
     Patches are assumed to overlap and the image is constructed by filling in
     the patches from left to right, top to bottom, averaging the overlapping
     regions.
-    Read more in the :ref:`User Guide <image_feature_extraction>`.
+
     Parameters
     ----------
     patches : array, shape = (n_patches, patch_height, patch_width) or
@@ -197,10 +277,13 @@ def reconstruct_patches(patches, image_size, step):
         The complete set of patches. If the patches contain colour information,
         channels are indexed along the last dimension: RGB patches would
         have `n_channels=3`.
+
     image_size : tuple of ints (image_height, image_width) or
         (image_height, image_width, n_channels)
         the size of the image that will be reconstructed
+
     step: number of pixels between two patches
+
     Returns
     -------
     image : array, shape = image_size

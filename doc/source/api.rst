@@ -5,9 +5,9 @@ API reference
 
 .. toctree::
 
-   api/convnet.diffraction
-   api/convnet.module_01
-   api/convnet.module_02
+   api/convnet.transform
+   api/convnet.utils
+
 
 .. automodule:: convnet
    :members:

@@ -1,7 +1,7 @@
-:mod:`convnet.module_01`
+:mod:`convnet.transform`
 ========================
 
-.. automodule:: convnet.module_01
+.. automodule:: convnet.transform
    :members:
    :show-inheritance:
    :undoc-members:
@@ -10,5 +10,6 @@
 
    .. autosummary::
    
-      function_01
-      function_02
+      model
+      train
+      predict
