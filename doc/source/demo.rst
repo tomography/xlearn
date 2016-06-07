@@ -1,1 +1,23 @@
-Examples========Here we describe what the examples are doing. You can cite with :cite:`reference:01`... toctree::   demo/doc.demo.example_01   demo/doc.demo.example_02.. automodule:: project   :members:   :undoc-members:   :show-inheritance: 
+========
+Examples
+========
+
+This section contains `Jupyter Notebooks <http://ipython.org/notebook.html>`_ and
+Python scripts examples for various tomoPy functions. 
+ 
+To `run <http://jupyter.readthedocs.org/en/latest/running.html>`_ these examples in a
+`notebooks <http://ipython.org/notebook.html>`_ install
+`Jupyter <http://jupyter.readthedocs.org/en/latest/install.html>`_ or run the python
+scripts from `here <https://github.com/XiaogangYangAPS/convnet/tree/master/doc/demo>`_
+
+
+.. toctree::
+
+   ipynb/train.rst
+   ipynb/predict.rst
+
+.. automodule:: convnet
+   :members:
+   :undoc-members:
+   :show-inheritance: 
+

@@ -48,9 +48,9 @@
 
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
-from convnet.classification import *
-from convnet.module_01 import *
-from convnet.module_02 import *
+
+from convnet.transform import *
+from convnet.utils import *
 
 try:
     import pkg_resources

@@ -326,6 +326,8 @@ class Mock(object):
         return Mock()
 
 MOCK_MODULES = ['numpy',
+                'numpy.lib',
+                'numpy.lib.stride_tricks',
                 'scipy',
                 'matplotlib', 
                 'matplotlib.pyplot',
