@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # #########################################################################
@@ -60,7 +60,7 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
 import convnet.utils as utils
 
 
-__authors__ = "Xiaogang Yang, Francesco De Carlo"
+__authors__ = "Xiaogang Yang"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
 __version__ = "0.1.0"
 __docformat__ = "restructuredtext en"
@@ -91,30 +91,28 @@ def model(dim_img, nb_filters, nb_conv):
 
     """
     mdl = Sequential()
+    mdl = Sequential()
+
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv,
-                            border_mode='same',
-                            input_shape=(1, dim_img, dim_img)))
+                            border_mode='valid',
+                            input_shape=(1, img_rows, img_cols)))
     mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
+    mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
+    mdl.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    mdl.add(Dropout(0.25))
+
+    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
+    mdl.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    mdl.add(Dropout(0.25))
 
     mdl.add(Flatten())
-    mdl.add(Dense((dim_img / 4) ** 2))
-    mdl.add(Reshape((1, dim_img / 4, dim_img / 4)))
-
-    mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
+    mdl.add(Dense(128))
     mdl.add(Activation('relu'))
-    mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
-    mdl.add(Convolution2D(1, 1, 1, border_mode='same'))
-
-    mdl.compile(loss='mean_squared_error', optimizer='Adam')
+    mdl.add(Dropout(0.5))
+    mdl.add(Dense(nb_classes))
+    mdl.add(Activation('softmax'))
 
     return mdl
 
@@ -147,14 +145,14 @@ def train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, ba
     img_input = np.reshape(img_input, (len(img_input), 1, dim_img, dim_img))
     img_output = np.reshape(img_output, (len(img_input), 1, dim_img, dim_img))
 
-    mdl = model(dim_img, nb_filters, nb_conv)
+    mdl = mdl(dim_img, nb_filters, nb_conv)
     mdl.fit(img_input, img_output, batch_size=batch_size, nb_epoch=nb_epoch)
     return mdl
 
 
 def predict(mdl, img, patch_size, patch_step, batch_size, dim_img):
     """
-    the cnn model for image transformation
+    the cnn mdl for image transformation
 
 
     Parameters
