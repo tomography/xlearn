@@ -55,7 +55,7 @@ from itertools import product
 import numbers
 from numpy.lib.stride_tricks import as_strided
 
-__authors__ = "Xiaogang Yang"
+__authors__ = "Xiaogang Yang, Francesco De Carlo"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
 __version__ = "0.1.0"
 __docformat__ = "restructuredtext en"
@@ -69,10 +69,16 @@ def nor_data(img):
     """
     Normalize the image
 
-    Parameters    ----------    img: array
+    Parameters
+    ----------
+    img: array
         The images need to be normalized
 
-    Returns    -------    img        Description.    """
+    Returns
+    -------
+    img
+        Description.
+    """
     mean_tmp = np.mean(img)
     std_tmp = np.std(img)
     img = (img-mean_tmp)/std_tmp
@@ -87,7 +93,11 @@ def check_random_state(seed):
     If seed is already a RandomState instance, return it.
     Otherwise raise ValueError.
 
-    Parameters    ----------    seed : type        Description.    """
+    Parameters
+    ----------
+    seed : type
+        Description.
+    """
     if seed is None or seed is np.random:
         return np.random.mtrand._rand
     if isinstance(seed, (numbers.Integral, np.integer)):
@@ -120,7 +130,11 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, step, max_patches=None):
         between 0 and 1, it is taken to be a proportion of the total number
         of patches.
 
-    Returns    -------    all_patches        Description.    """
+    Returns
+    -------
+    all_patches
+        Description.
+    """
     n_h = (i_h - p_h)/step + 1
     n_w = (i_w - p_w)/step + 1
     all_patches = n_h * n_w

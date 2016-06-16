@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='convnet',
-    author='Xiaogang Yang',
+    author='Xiaogang Yang, Francesco De Carlo',
     packages=find_packages(),
     version=open('VERSION').read().strip(),
     description = 'Convolutional Neural Network for X-ray Science.',

@@ -54,13 +54,13 @@ from __future__ import print_function
 import numpy as np
 
 from keras.models import Sequential
-from keras.layers.core import Dense, Reshape, Activation, Flatten
+from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
 
 import convnet.utils as utils
 
 
-__authors__ = "Xiaogang Yang"
+__authors__ = "Xiaogang Yang, Francesco De Carlo"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
 __version__ = "0.1.0"
 __docformat__ = "restructuredtext en"
@@ -90,12 +90,12 @@ def model(dim_img, nb_filters, nb_conv):
         Description.
 
     """
-    mdl = Sequential()
+
     mdl = Sequential()
 
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                             border_mode='valid',
-                            input_shape=(1, img_rows, img_cols)))
+                            input_shape=(1, dim_img, dim_img)))
     mdl.add(Activation('relu'))
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
