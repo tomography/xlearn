@@ -33,6 +33,7 @@ mdl.load_weights('weight_center.h5')
 print('The model loading time is %s seconds'%(time.time()-start_time))
 start_time = time.time()
 Y_score = np.zeros((len(fnames)))
+
 for i in range(len(fnames)):
     img = dxchange.read_tiff(fnames[i])
     img = nor_data(img)
