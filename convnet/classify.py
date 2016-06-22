@@ -1,4 +1,4 @@
-/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # #########################################################################
@@ -55,7 +55,8 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
+from keras.utils import np_utils
 
 import convnet.utils as utils
 
@@ -65,11 +66,10 @@ __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
 __version__ = "0.1.0"
 __docformat__ = "restructuredtext en"
 __all__ = ['model',
-           'train',
-           'predict']
+           'train']
 
 
-def model(dim_img, nb_filters, nb_conv):
+def model(dim_img, nb_filters, nb_conv, nb_classes):
     """
     the cnn model for image transformation
 
@@ -99,12 +99,12 @@ def model(dim_img, nb_filters, nb_conv):
     mdl.add(Activation('relu'))
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    mdl.add(MaxPooling2D(pool_size=(2, 2)))
     mdl.add(Dropout(0.25))
 
     mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+    mdl.add(MaxPooling2D(pool_size=(2, 2)))
     mdl.add(Dropout(0.25))
 
     mdl.add(Flatten())
@@ -114,10 +114,11 @@ def model(dim_img, nb_filters, nb_conv):
     mdl.add(Dense(nb_classes))
     mdl.add(Activation('softmax'))
 
+    mdl.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=["accuracy"])
+
     return mdl
 
-
-def train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, batch_size, nb_epoch):
+def train(x_train, y_train, x_test, y_test, dim_img, nb_filters, nb_conv, batch_size, nb_epoch, nb_classes):
     """
     Function description.
 
@@ -137,47 +138,16 @@ def train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, ba
     return_01
         Description.
     """
+    y_train = np_utils.to_categorical(y_train, nb_classes)
+    y_test = np_utils.to_categorical(y_test, nb_classes)
+    print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
+    mdl = model(dim_img, nb_filters, nb_conv, nb_classes)
 
-    img_x = utils.nor_data(img_x)
-    img_y = utils.nor_data(img_y)
-    img_input = utils.extract_patches(img_x, patch_size, patch_step)
-    img_output = utils.extract_patches(img_y, patch_size, patch_step)
-    img_input = np.reshape(img_input, (len(img_input), 1, dim_img, dim_img))
-    img_output = np.reshape(img_output, (len(img_input), 1, dim_img, dim_img))
-
-    mdl = mdl(dim_img, nb_filters, nb_conv)
-    mdl.fit(img_input, img_output, batch_size=batch_size, nb_epoch=nb_epoch)
+    mdl.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
+            verbose=1, validation_data=(x_test, y_test))
+    mdl.save_weights('weight_center.h5')
+    score = mdl.evaluate(x_test, y_test, show_accuracy=True, verbose=0)
+    print('Test score:', score[0])
+    print('Test accuracy:', score[1])
     return mdl
 
-
-def predict(mdl, img, patch_size, patch_step, batch_size, dim_img):
-    """
-    the cnn mdl for image transformation
-
-
-    Parameters
-    ----------
-    img : array
-        The image need to be calculated
-
-    patch_size : (int, int)
-        The patches dimension
-
-    dim_img : int
-        The input image dimension
-
-    Returns
-    -------
-    img_rec
-        Description.
-
-      """
-    img = np.float16(utils.nor_data(img))
-    img_y, img_x = img.shape
-    x_img = utils.extract_patches(img, patch_size, patch_step)
-    x_img = np.reshape(x_img, (len(x_img), 1, dim_img, dim_img))
-    y_img = mdl.predict(x_img, batch_size=batch_size)
-    del x_img
-    y_img = np.reshape(y_img, (len(y_img), dim_img, dim_img))
-    img_rec = utils.reconstruct_patches(y_img, (img_y, img_x), patch_step)
-    return img_rec

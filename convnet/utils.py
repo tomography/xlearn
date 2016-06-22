@@ -317,3 +317,64 @@ def reconstruct_patches(patches, image_size, step):
             img[i, j] /= float(min(i + step, p_h, i_h - i) *
                             min(j + step, p_w, i_w - j))
     return img
+    
+def img_window(img, window_size):
+    """
+    Function Description
+    
+    Parameters
+    ----------
+    img : define img
+
+    window_size : describe window_size
+
+    Returns
+    -------
+    img_wd : describe img_wd
+
+    """
+    if len(img.shape) == 2:
+        # img_wd = np.zeros((window_size, window_size))
+        y_img, x_img = img.shape
+        x_l = np.random.randint(0, x_img-window_size)
+        x_r = x_l+window_size
+        y_t = np.random.randint(0, y_img-window_size)
+        y_b = y_t+window_size
+        img_wd = img[y_t:y_b, x_l:x_r]
+    else:
+        img_wd = np.zeros((len(img), window_size, window_size))
+        for i in range(len(img)):
+            img_num, y_img, x_img = img.shape
+            x_l = np.random.randint(0, x_img-window_size)
+            x_r = x_l + window_size
+            y_t = np.random.randint(0, y_img-window_size)
+            y_b = y_t + window_size
+            img_wd[i] = img[i, y_t:y_b, x_l:x_r]
+    return img_wd
+
+
+def extract_3d(img, patch_size, step):
+    """
+    Function Description
+    
+    Parameters
+    ----------
+    img : define img
+
+    patch_size : describe patch_size
+
+    step : describe step
+
+    Returns
+    -------
+    patches : describe patches
+
+    """
+    if len(img.shape) == 2:
+        patches = extract_patches(img, patch_size, step)
+    else:
+        patches = extract_patches(img[0], patch_size, step)
+        for i in range(len(img)-1):
+            patches_tmp = extract_patches(img[i+1], patch_size, step)
+            patches = np.concatenate((patches, patches_tmp), axis=0)
+    return patches
