@@ -21,9 +21,6 @@ nb_pool = 2
 nb_conv = 3
 
 
-
-
-
 fname = '/home/oxygen/YANGX/Globus/center/Blakely_SLS_1038_1058_1/1038.tiff'
 ind_uncenter1 = range(1038, 1047)
 ind_uncenter2 = range(1049, 1057)
@@ -58,44 +55,3 @@ y_test = np.zeros(20000)
 y_test[10000:19999] = 1
 
 train(x_train, y_train, x_test, y_test, dim_img, nb_filters, nb_conv, batch_size, nb_epoch, nb_classes)
-#
-# y_train = np_utils.to_categorical(y_train, nb_classes)
-# Y_test = np_utils.to_categorical(y_test, nb_classes)
-# print x_train.shape, y_train.shape, x_test.shape, Y_test.shape
-#
-# model = Sequential()
-#
-# model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
-#                         border_mode='valid',
-#                         input_shape=(1, img_rows, img_cols)))
-# model.add(Activation('relu'))
-# model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-# model.add(Dropout(0.25))
-#
-# model.add(Convolution2D(nb_filters*2, nb_conv,nb_conv))
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
-# model.add(Dropout(0.25))
-#
-# model.add(Flatten())
-# model.add(Dense(128))
-# model.add(Activation('relu'))
-# model.add(Dropout(0.5))
-# model.add(Dense(nb_classes))
-# model.add(Activation('softmax'))
-#
-# model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=["accuracy"])
-#
-# model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-#           show_accuracy=True, verbose=1, validation_data=(x_test, Y_test))
-# model.save_weights('weight_center.h5')
-# score = model.evaluate(x_test, Y_test, show_accuracy=True, verbose=0)
-# print('Test score:', score[0])
-# print('Test accuracy:', score[1])
-#
-# print('Predicting')
-# predicted_output = model.predict(x_test, batch_size=batch_size)
-# np.save('labels', Y_test)
-# np.save('predicted_output', predicted_output)
