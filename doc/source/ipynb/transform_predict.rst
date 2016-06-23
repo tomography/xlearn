@@ -4,8 +4,8 @@ Predict
 Here is an example on how to use an already trained convolutional neural netwrok
 on a new image. The output will be estract features based on the training received.
 
-You can download the python scritp :download:`here<../../../doc/demo/predict.py>`
-or the Jupyter notebook :download:`here<../../../doc/demo/predict.ipynb>`
+You can download the python scritp :download:`here<../../../doc/demo/transform_predict.py>`
+or the Jupyter notebook :download:`here<../../../doc/demo/transform_predict.ipynb>`
 
 .. code:: python
 
@@ -56,19 +56,19 @@ then:
 
 .. code:: python
 
-    fname = '../../convnet/data/predict_test.tiff'
+    fname = '../../test/test_data/predict_test.tiff'
     img_test = dxchange.read_tiff(fname)
     plt.imshow(img_test, cmap='Greys_r')
     plt.show()
 
 
 
-.. image:: predict_files/predict_4_0.png
+.. image:: transform_predict_files/predict_4_0.png
 
 
 .. code:: python
 
-    fname_save = '../../convnet/data/predict_test_result'
+    fname_save = '../../test/test_data/predict_test_result'
 
 .. code:: python
 
@@ -85,6 +85,6 @@ then:
 
 
 
-.. image:: predict_files/predict_8_0.png
+.. image:: transform_predict_files/predict_8_0.png
 
 

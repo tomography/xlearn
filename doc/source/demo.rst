@@ -13,11 +13,6 @@ scripts from `here <https://github.com/XiaogangYangAPS/convnet/tree/master/doc/d
 
 .. toctree::
 
-   ipynb/train.rst
-   ipynb/predict.rst
-
-.. automodule:: convnet
-   :members:
-   :undoc-members:
-   :show-inheritance: 
+   ipynb/transform.rst
+   ipynb/classify.rst
 

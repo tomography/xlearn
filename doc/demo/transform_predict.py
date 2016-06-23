@@ -20,7 +20,7 @@ mdl.load_weights('training_weights.h5')
 
 print('Predicting')
 
-folder = '../../convnet/data/'
+folder = '../../test/test_data/'
 files = [f for f in sorted(os.listdir(folder)) if re.match(r'.+.tiff', f)]
 
 for fname in files:    time_start = time.time()
