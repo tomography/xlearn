@@ -1,10 +1,10 @@
-Train
------
+Transform Training
+------------------
 
 Here is an example on how to train a convolutional neural network.
 
-You can download the python scritp :download:`here<../../../doc/demo/train.py>`
-or the Jupyter notebook :download:`here<../../../doc/demo/train.ipynb>`
+You can download the python scritp :download:`here<../../../doc/demo/transform_train.py>`
+or the Jupyter notebook :download:`here<../../../doc/demo/transform_train.ipynb>`
 
 .. code:: python
 
@@ -49,8 +49,8 @@ then:
 
 .. code:: python
 
-    img_x = dxchange.read_tiff('../../convnet/data/training_input.tiff')
-    img_y = dxchange.read_tiff('../../convnet/data/training_output.tiff')
+    img_x = dxchange.read_tiff('../../test/test_data/training_input.tiff')
+    img_y = dxchange.read_tiff('../../test/test_data/training_output.tiff')
 
 .. code:: python
 
@@ -59,7 +59,7 @@ then:
 
 
 
-.. image:: train_files/train_4_0.png
+.. image:: transform_train_files/train_4_0.png
 
 
 .. code:: python
@@ -69,7 +69,7 @@ then:
 
 
 
-.. image:: train_files/train_5_0.png
+.. image:: transform_train_files/train_5_0.png
 
 
 .. code:: python

@@ -13,8 +13,8 @@ scripts from `here <https://github.com/XiaogangYangAPS/convnet/tree/master/doc/d
 
 .. toctree::
 
-   ipynb/train.rst
-   ipynb/predict.rst
+   ipynb/transform_train.rst
+   ipynb/transform_predict.rst
 
 .. automodule:: convnet
    :members:

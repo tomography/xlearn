@@ -26,5 +26,5 @@ img_y = dxchange.read_tiff('../../test/test_data/training_output.tiff')
 
 # train and save the model
 model = train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, batch_size, nb_epoch)
-model.save_weights('training_weights.h5')
+model.save_weights('transform_training_weights.h5')
 
