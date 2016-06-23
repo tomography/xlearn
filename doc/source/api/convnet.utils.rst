@@ -14,4 +14,7 @@
       check_random_state
       extract_patches
       reconstruct_patches
+      img_window
+      extract_3d
+
 

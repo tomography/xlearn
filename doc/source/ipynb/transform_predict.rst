@@ -1,5 +1,5 @@
-Transform Predict
------------------
+Predict
+-------
 
 Here is an example on how to use an already trained convolutional neural netwrok
 on a new image. The output will be estract features based on the training received.

@@ -62,7 +62,9 @@ __docformat__ = "restructuredtext en"
 __all__ = ['nor_data',
            'check_random_state',
            'extract_patches',
-           'reconstruct_patches']
+           'reconstruct_patches',
+           'img_window',
+           'extract_3d']
 
 
 def nor_data(img):

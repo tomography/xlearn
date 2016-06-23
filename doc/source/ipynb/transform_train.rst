@@ -1,5 +1,5 @@
-Transform Training
-------------------
+Train
+-----
 
 Here is an example on how to train a convolutional neural network.
 
