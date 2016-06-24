@@ -16,14 +16,15 @@ patch_step = 4
 patch_size = (dim_img, dim_img)
 
 mdl = model(dim_img, nb_filters, nb_conv)
-mdl.load_weights('training_weights.h5')
+mdl.load_weights('transform_training_weights.h5')
 
 print('Predicting')
 
 folder = '../../test/test_data/'
 files = [f for f in sorted(os.listdir(folder)) if re.match(r'.+.tiff', f)]
 
-for fname in files:    time_start = time.time()
+for fname in files:
+    time_start = time.time()
     sname = fname.split('.')
     time_start = time.time()
     fname_save = folder + sname[0] + '_result'
