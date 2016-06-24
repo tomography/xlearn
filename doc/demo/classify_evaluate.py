@@ -4,6 +4,8 @@
 """
 Example script 
 """
+# To run this example please download the test data from the classify_evaluate folder at 
+# http://tinyurl.com/APS-convnet 
 
 from __future__ import print_function
 import dxchange
@@ -33,7 +35,7 @@ nb_conv = 3
 nb_evl = 100
 
 start_time = time.time()
-fnames = glob.glob('/local/decarlo/data/databank/xiaogang/center/test_05/Hornby_APS_1000_1058_1/*.tiff')
+fnames = glob.glob('../../test/test_data/*.tiff')
 fnames = np.sort(fnames)
 
 mdl = model(dim_img, nb_filters, nb_conv, nb_classes)

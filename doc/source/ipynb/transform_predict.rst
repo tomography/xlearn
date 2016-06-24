@@ -1,8 +1,8 @@
 Predict
 -------
 
-Here is an example on how to use an already trained convolutional neural netwrok
-on a new image. The output will be estract features based on the training received.
+Here is an example on how to use an already trained convolutional neural network
+to automatically segment a series of raw images.
 
 You can download the python scritp :download:`here<../../../doc/demo/transform_predict.py>`
 or the Jupyter notebook :download:`here<../../../doc/demo/transform_predict.ipynb>`

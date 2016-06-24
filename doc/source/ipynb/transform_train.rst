@@ -1,7 +1,11 @@
 Train
 -----
 
-Here is an example on how to train a convolutional neural network.
+Here is an example on how to train a convolutional neural network to segment an image.
+The network is trained using one raw image  and one that has been manually segmented.
+
+Once the training is complete the network will be able to automatically segment a series of 
+raw images.
 
 You can download the python scritp :download:`here<../../../doc/demo/transform_train.py>`
 or the Jupyter notebook :download:`here<../../../doc/demo/transform_train.ipynb>`

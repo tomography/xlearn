@@ -4,6 +4,8 @@
 """
 Example script 
 """
+# To run this example please download the test data from the classify_train folder at 
+# http://tinyurl.com/APS-convnet 
 
 from __future__ import print_function
 import dxchange
@@ -28,8 +30,7 @@ nb_pool = 2
 # convolution kernel size
 nb_conv = 3
 
-
-fname = '/local/decarlo/data/databank/xiaogang/center/test_01/Blakely_SLS_1038_1058_1/1038.tiff'
+fname = '../../test/test_data/1038.tiff'
 ind_uncenter1 = range(1038, 1047)
 ind_uncenter2 = range(1049, 1057)
 uncenter1 = dxchange.read_tiff_stack(fname, ind=ind_uncenter1, digit=4)
@@ -43,7 +44,7 @@ uncenter_patches = extract_3d(uncenter, patch_size, 1)
 np.random.shuffle(uncenter_patches)
 print (uncenter_patches.shape)
 # print uncenter_patches.shape
-center_img = dxchange.read_tiff('/local/decarlo/data/databank/xiaogang/center/test_01/Blakely_SLS_1038_1058_1/1048.tiff')
+center_img = dxchange.read_tiff('../../test/test_data/1048.tiff')
 center_img = nor_data(center_img)
 print (center_img.shape)
 center_img = img_window(center_img[360:1460, 440:1440], 400)
