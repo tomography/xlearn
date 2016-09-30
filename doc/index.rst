@@ -1,16 +1,16 @@
-========
-Conv Net
-========
+======
+Xlearn
+======
 
-.. image:: source/img/convnet-logo.png
+.. image:: source/img/xlearn-logo.png
    :width: 320px
-   :alt: convnet
+   :alt: xlearn
 
 
-Convolutional Neural Networks for X-ray Science or `ConvNet <https://github.com/XiaogangYangAPS/convnet>`_ 
+Convolutional Neural Networks for X-ray Science or `xlearn <https://github.com/tomography/xlearn>`_ 
 is  ...
 
-Here is how to add a link to your documentation `Docs <http://convnet.readthedocs.org/>`_ 
+Here is how to add a link to your documentation `Docs <http://xlearn.readthedocs.org/>`_ 
 and here is how to add a reference :cite:`cite:01`
 
 
@@ -23,9 +23,9 @@ Features
 Contribute
 ----------
 
-* Documentation: https://github.com/XiaogangYangAPS/convnet/tree/master/doc
-* Issue Tracker: https://github.com/XiaogangYangAPS/convnet/docs/issues
-* Source Code: https://github.com/XiaogangYangAPS/convnet/project
+* Documentation: https://github.com/tomography/xlearn/tree/master/doc
+* Issue Tracker: https://github.com/tomography/xlearn/docs/issues
+* Source Code: https://github.com/tomography/xlearn/project
 
 Content
 -------

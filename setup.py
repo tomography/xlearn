@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='convnet',
+    name='xlearn',
     author='Xiaogang Yang, Francesco De Carlo',
     packages=find_packages(),
     version=open('VERSION').read().strip(),

@@ -1,16 +1,16 @@
 API reference
 =============
 
-.. rubric:: **Convnet Modules:**
+.. rubric:: **xlearn Modules:**
 
 .. toctree::
 
-   api/convnet.transform
-   api/convnet.classify
-   api/convnet.utils
+   api/xlearn.transform
+   api/xlearn.classify
+   api/xlearn.utils
 
 
-.. automodule:: convnet
+.. automodule:: xlearn
    :members:
    :undoc-members:
    :show-inheritance: 

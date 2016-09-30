@@ -6,7 +6,7 @@ Classify
    classify_train.rst
    classify_evaluate.rst
 
-.. automodule:: convnet
+.. automodule:: xlearn
    :members:
    :undoc-members:
    :show-inheritance: 

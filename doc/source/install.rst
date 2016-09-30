@@ -3,7 +3,7 @@ Install
 =======
 
 This section covers the basics of how to download and install 
-`convnet <https://github.com/XiaogangYangAPS/convnet>`_.
+`xlearn <https://github.com/tomography/xlearn>`_.
 
 .. contents:: Contents:
    :local:
@@ -12,13 +12,13 @@ This section covers the basics of how to download and install
 Installing from source
 ======================
   
-Clone the `convnet <https://github.com/XiaogangYangAPS/convnet>`_  
+Clone the `xlearn <https://github.com/tomography/xlearn>`_  
 from `GitHub <https://github.com>`_ repository::
 
-    git clone https://github.com/XiaogangYangAPS/convnet.git convnet
+    git clone https://github.com/tomography/xlearn.git xlearn
 
 then::
 
-    cd convnet
+    cd xlearn
     python setup.py install
     

@@ -6,7 +6,7 @@ Transform
    transform_train.rst
    transform_predict.rst
 
-.. automodule:: convnet
+.. automodule:: xlearn
    :members:
    :undoc-members:
    :show-inheritance: 

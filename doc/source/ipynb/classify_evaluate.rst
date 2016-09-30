@@ -27,10 +27,10 @@ To run this example please download the test data from the classify_evaluate fol
 
     import dxchange
     import numpy as np
-    from convnet.utils import nor_data
-    from convnet.utils import extract_3d
-    from convnet.utils import img_window
-    from convnet.classify import model
+    from xlearn.utils import nor_data
+    from xlearn.utils import extract_3d
+    from xlearn.utils import img_window
+    from xlearn.classify import model
     import matplotlib.pyplot as plt
     import time
     import glob
@@ -72,7 +72,7 @@ convolution kernel size
 
 Please download the test data from the classify\_evaluate folder at
 
-http://tinyurl.com/APS-convnet
+http://tinyurl.com/APS-xlearn
 
 and put them in the test\_data folder
 

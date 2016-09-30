@@ -1,7 +1,7 @@
-:mod:`convnet.classify`
-========================
+:mod:`xlearn.classify`
+======================
 
-.. automodule:: convnet.classify
+.. automodule:: xlearn.classify
    :members:
    :show-inheritance:
    :undoc-members:

@@ -21,7 +21,7 @@ or the Jupyter notebook :download:`here<../../../doc/demo/transform_predict.ipyn
 
     import dxchange
 
-Image data I/O in ConvNet is supported by 
+Image data I/O in xlearn is supported by 
 `DXchange <http://dxchange.readthedocs.io>`__.
 
 .. code:: python
@@ -30,13 +30,13 @@ Image data I/O in ConvNet is supported by
 
 matplotlib provide plotting of the result in this notebook.
 
-`Install <http://convnet.readthedocs.io/en/latest/install.html>`__ ConvNet
+`Install <http://xlearn.readthedocs.io/en/latest/install.html>`__ xlearn
 then:
 
 .. code:: python
 
-    from convnet.transform import model
-    from convnet.transform import predict
+    from xlearn.transform import model
+    from xlearn.transform import predict
 
 .. code:: python
 

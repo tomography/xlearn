@@ -13,7 +13,7 @@ You can download the python scritp :download:`here <../../../doc/demo/classify_t
 or the Jupyter notebook :download:`here <../../../doc/demo/classify_train.ipynb>`
 
 To run this example please download the test data from the classify_train folder at 
-`url <http://tinyurl.com/APS-convnet>`_ 
+`url <http://tinyurl.com/APS-xlearn>`_ 
 
 
 .. code:: python
@@ -30,10 +30,10 @@ To run this example please download the test data from the classify_train folder
 
     import dxchange
     import numpy as np
-    from convnet.utils import nor_data
-    from convnet.utils import extract_3d
-    from convnet.utils import img_window
-    from convnet.classify import train
+    from xlearn.utils import nor_data
+    from xlearn.utils import extract_3d
+    from xlearn.utils import img_window
+    from xlearn.classify import train
 
 
 .. parsed-literal::

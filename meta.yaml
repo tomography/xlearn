@@ -1,9 +1,9 @@
 package:
-  name: convnet
+  name: xlearn
   version: '0.0.1'
 
 source:
-  git_url: https://github.com/decarlof/CNN_classification.git
+  git_url: https://github.com/tomography/xlearn.git
   
 build:
   number: 0
