@@ -57,7 +57,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Reshape, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
 
-import convnet.utils as utils
+import xlearn.utils as utils
 
 
 __authors__ = "Xiaogang Yang, Francesco De Carlo"

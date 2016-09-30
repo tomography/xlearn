@@ -58,7 +58,7 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 
-import convnet.utils as utils
+import xlearn.utils as utils
 
 
 __authors__ = "Xiaogang Yang, Francesco De Carlo"

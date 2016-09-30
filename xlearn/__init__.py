@@ -49,11 +49,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-from convnet.transform import *
-from convnet.utils import *
+from xlearn.transform import *
+from xlearn.utils import *
 
 try:
     import pkg_resources
-    __version__ = pkg_resources.working_set.require("convnet")[0].version
+    __version__ = pkg_resources.working_set.require("xlearn")[0].version
 except:
     pass
