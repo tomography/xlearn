@@ -5,15 +5,15 @@
 Example script 
 """
 # To run this example please download the test data from the classify_train folder at 
-# http://tinyurl.com/APS-convnet 
+# http://tinyurl.com/APS-xlearn 
 
 from __future__ import print_function
 import dxchange
 import numpy as np
-from convnet.utils import nor_data
-from convnet.utils import extract_3d
-from convnet.utils import img_window
-from convnet.classify import train
+from xlearn.utils import nor_data
+from xlearn.utils import extract_3d
+from xlearn.utils import img_window
+from xlearn.classify import train
 
 np.random.seed(1337)
 
