@@ -6,7 +6,7 @@ Example script
 """
 
 from __future__ import print_function
-from convnet.transform import train
+from xlearn.transform import train
 import dxchange
 
 

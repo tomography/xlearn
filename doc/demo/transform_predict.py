@@ -2,8 +2,8 @@ import os
 import re
 import dxchange
 import time
-from convnet.transform import model
-from convnet.transform import predict
+from xlearn.transform import model
+from xlearn.transform import predict
 
 
 batch_size = 800
