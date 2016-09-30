@@ -1,7 +1,7 @@
-:mod:`convnet.transform`
-========================
+:mod:`xlearn.transform`
+=======================
 
-.. automodule:: convnet.transform
+.. automodule:: xlearn.transform
    :members:
    :show-inheritance:
    :undoc-members:

@@ -1,7 +1,7 @@
-:mod:`convnet.utils`
-====================
+:mod:`xlearn.utils`
+===================
 
-.. automodule:: convnet.utils
+.. automodule:: xlearn.utils
    :members:
    :show-inheritance:
    :undoc-members:
