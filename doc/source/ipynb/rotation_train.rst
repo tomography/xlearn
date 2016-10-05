@@ -83,7 +83,7 @@ convolution kernel size
 
 
 
-.. image:: classify_train_files/classify_train_10_0.png
+.. image:: rotation_train_files/rotation_train_10_0.png
 
 
 .. code:: python
@@ -125,7 +125,7 @@ convolution kernel size
 
 
 
-.. image:: classify_train_files/classify_train_19_0.png
+.. image:: rotation_train_files/rotation_train_19_0.png
 
 
 

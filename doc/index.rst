@@ -31,6 +31,7 @@ Content
    :maxdepth: 1
 
    source/about
+   source/introduction
    source/install
    source/api
    source/demo

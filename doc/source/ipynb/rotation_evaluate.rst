@@ -123,6 +123,6 @@ and put them in the test\_data folder
 
 
 
-.. image:: classify_evaluate_files/classify_evaluate_15_1.png
+.. image:: rotation_evaluate_files/rotation_evaluate_15_1.png
 
 

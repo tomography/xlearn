@@ -3,7 +3,7 @@ Examples
 ========
 
 This section contains `Jupyter Notebooks <http://ipython.org/notebook.html>`_ and
-Python scripts examples for various tomoPy functions. 
+Python scripts examples for various xlearn functions. 
  
 To `run <http://jupyter.readthedocs.org/en/latest/running.html>`_ these examples in a
 `notebooks <http://ipython.org/notebook.html>`_ install
@@ -14,5 +14,5 @@ scripts from `here <https://github.com/tomography/xlearn/tree/master/doc/demo>`_
 .. toctree::
 
    ipynb/transform.rst
-   ipynb/classify.rst
+   ipynb/rotation.rst
 
