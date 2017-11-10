@@ -7,17 +7,14 @@ Xlearn
    :alt: xlearn
 
 
-Convolutional Neural Networks for X-ray Science or `xlearn <https://github.com/tomography/xlearn>`_ 
-is  ...
-
-Here is how to add a link to your documentation `Docs <http://xlearn.readthedocs.org/>`_ 
-and here is how to add a reference :cite:`cite:01`
-
+`Xlearn <https://github.com/tomography/xlearn>`_ is an open-source Python package implementing Convolutional Neural Networks (CNN) for X-ray Science.
 
 Features
 --------
 
-* Example of how to write documentation 
+* Correction of instrument and beam instability artifacts
+* Feature extraction, segmentation
+* ...
 
 
 Contribute
@@ -34,6 +31,7 @@ Content
    :maxdepth: 1
 
    source/about
+   source/introduction
    source/install
    source/api
    source/demo
