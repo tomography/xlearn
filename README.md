@@ -1,2 +1,2 @@
 # xlearn
-Machine learning tools for x-ray imaging
+Deep learning toolbox for x-ray imaging
