@@ -54,7 +54,7 @@ from __future__ import print_function
 import numpy as np
 
 from keras.models import Sequential
-from keras.layers.core import Dense, Reshape, Activation, Flatten
+from keras.layers.core import Dense, Reshape, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, UpSampling2D
 
 import xlearn.utils as utils
@@ -91,28 +91,23 @@ def model(dim_img, nb_filters, nb_conv):
 
     """
     mdl = Sequential()
-    mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv,
-                            border_mode='same',
-                            input_shape=(1, dim_img, dim_img)))
-    mdl.add(Activation('relu'))
+    mdl.add(Convolution2D(nb_filters, (nb_conv, nb_conv),
+                            padding='same', activation='relu',
+                            input_shape=(dim_img, dim_img, 1)))
     mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
+    mdl.add(Convolution2D(nb_filters * 2, (nb_conv, nb_conv), padding='same', activation='relu'))
     mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
+    mdl.add(Convolution2D(nb_filters * 2, (nb_conv, nb_conv), padding='same', activation='relu'))
 
     mdl.add(Flatten())
-    mdl.add(Dense((dim_img / 4) ** 2))
-    mdl.add(Reshape((1, dim_img / 4, dim_img / 4)))
+    mdl.add(Dense(int(dim_img / 4) ** 2))
+    mdl.add(Reshape((1, int(dim_img / 4), int(dim_img / 4))))
 
     mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters * 2, nb_conv, nb_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
+    mdl.add(Convolution2D(nb_filters * 2, (nb_conv, nb_conv), padding='same', activation='relu'))
     mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
-    mdl.add(Convolution2D(1, 1, 1, border_mode='same'))
+    mdl.add(Convolution2D(nb_filters, (nb_conv, nb_conv), padding='same', activation='relu'))
+    mdl.add(Convolution2D(1, (1, 1), padding='same', activation='relu'))
 
     mdl.compile(loss='mean_squared_error', optimizer='Adam')
 
@@ -144,11 +139,12 @@ def train(img_x, img_y, patch_size, patch_step, dim_img, nb_filters, nb_conv, ba
     img_y = utils.nor_data(img_y)
     img_input = utils.extract_patches(img_x, patch_size, patch_step)
     img_output = utils.extract_patches(img_y, patch_size, patch_step)
-    img_input = np.reshape(img_input, (len(img_input), 1, dim_img, dim_img))
-    img_output = np.reshape(img_output, (len(img_input), 1, dim_img, dim_img))
+    img_input = np.reshape(img_input, (img_input.shape[0], dim_img, dim_img, 1))
+    img_output = np.reshape(img_output, (img_output.shape[0], dim_img, dim_img, 1))
 
     mdl = model(dim_img, nb_filters, nb_conv)
-    mdl.fit(img_input, img_output, batch_size=batch_size, nb_epoch=nb_epoch)
+    print(mdl.summary())
+    mdl.fit(img_input, img_output, batch_size=batch_size, epochs=nb_epoch)
     return mdl
 
 
@@ -175,11 +171,11 @@ def predict(mdl, img, patch_size, patch_step, batch_size, dim_img):
 
       """
     img = np.float16(utils.nor_data(img))
-    img_y, img_x = img.shape
-    x_img = utils.extract_patches(img, patch_size, patch_step)
-    x_img = np.reshape(x_img, (len(x_img), 1, dim_img, dim_img))
-    y_img = mdl.predict(x_img, batch_size=batch_size)
-    del x_img
-    y_img = np.reshape(y_img, (len(y_img), dim_img, dim_img))
-    img_rec = utils.reconstruct_patches(y_img, (img_y, img_x), patch_step)
+    img_h, img_w = img.shape
+    input_img = utils.extract_patches(img, patch_size, patch_step)
+    input_img_img = np.reshape(input_img, (input_img.shape[0], dim_img, dim_img, 1))
+    output_img = mdl.predict(input_img, batch_size=batch_size)
+    del input_img
+    output_img = np.reshape(output_img, (output_img.shape[0], dim_img, dim_img))
+    img_rec = utils.reconstruct_patches(output_img, (img_h, img_w), patch_step)
     return img_rec

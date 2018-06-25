@@ -137,8 +137,8 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, step, max_patches=None):
     all_patches
         Description.
     """
-    n_h = (i_h - p_h)/step + 1
-    n_w = (i_w - p_w)/step + 1
+    n_h = (i_h - p_h)//step + 1
+    n_w = (i_w - p_w)//step + 1
     all_patches = n_h * n_w
 
     if max_patches:
@@ -309,8 +309,8 @@ def reconstruct_patches(patches, image_size, step):
     p_h, p_w = patches.shape[1:3]
     img = np.zeros(image_size)
     # compute the dimensions of the patches array
-    n_h = (i_h - p_h)/step + 1
-    n_w = (i_w - p_w)/step + 1
+    n_h = (i_h - p_h)//step + 1
+    n_w = (i_w - p_w)//step + 1
     for p, (i, j) in zip(patches, product(range(n_h), range(n_w))):
         img[i*step:i*step + p_h, j*step:j*step + p_w] += p
 
