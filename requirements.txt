@@ -1,4 +1,5 @@
 python
 numpy
+tensorflow
 keras
 scipy
