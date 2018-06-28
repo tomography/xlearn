@@ -54,6 +54,7 @@ import tensorflow as tf
 from tensorflow.python.keras.models import Sequential, Model
 from tensorflow.python.keras.layers import Dense, Reshape, Flatten, \
     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
+from tensorflow.python.keras.utils import multi_gpu_model
 
 __authors__ = "Xiaogang Yang, Francesco De Carlo"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
@@ -115,7 +116,7 @@ def classifier(ih, iw, nb_conv, size_conv, nb_classes):
     return mdl
 
 
-def transformer2(ih, iw, nb_conv, size_conv):
+def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     """
     The simple cnn model for image transformation with 2 times of downsampling. It is a choice for fast running.
     However, it will lose resolution during the transformation.
@@ -135,35 +136,52 @@ def transformer2(ih, iw, nb_conv, size_conv):
     mdl
         Description.
     """
+    inputs = Input((ih, iw, 1))
 
-    mdl = Sequential()
-    mdl.add(Conv2D(nb_conv, size_conv, size_conv,
-                            border_mode='same',
-                            input_shape=(ih, iw, 1)))
-    mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Conv2D(nb_conv * 2, size_conv, size_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
-    mdl.add(MaxPooling2D(pool_size=(2, 2)))
-    mdl.add(Conv2D(nb_conv * 2, size_conv, size_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
+    conv1 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(inputs)
+    conv1 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv1)
 
-    mdl.add(Flatten())
-    mdl.add(Dense((ih*iw / 4) ** 2))
-    mdl.add(Reshape((1, ih*iw / 4, ih*iw / 4)))
+    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
 
-    mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Conv2D(nb_conv * 2, size_conv, size_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
-    mdl.add(UpSampling2D(size=(2, 2)))
-    mdl.add(Conv2D(nb_conv, size_conv, size_conv, border_mode='same'))
-    mdl.add(Activation('relu'))
-    mdl.add(Conv2D(1, 1, 1, border_mode='same'))
+    conv2 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(pool1)
+    conv2 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv2)
 
-    mdl.compile(loss='mean_squared_error', optimizer='Adam')
+    pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 
+    conv3 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(pool2)
+    conv3 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv3)
+
+    conv4 = Conv2D(1, (size_conv, size_conv), activation='relu', padding='same')(conv3)
+    #
+    fc1 = Flatten()(conv4)
+    fc1 = Dense(iw * ih / 32, activation='relu')(fc1)
+    fc1 = Dropout(0.25)(fc1)
+    fc1 = Dense(iw * ih / 16, activation='relu')(fc1)
+    fc1 = Dropout(0.25)(fc1)
+    fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
+
+    fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
+    fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), activation='relu', padding='same')(fc2)
+
+    up1 = concatenate([UpSampling2D(size=(2, 2))(fc2), conv2], axis=3)
+
+    conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up1)
+    conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv6)
+
+    up2 = concatenate([UpSampling2D(size=(2, 2))(conv6), conv1], axis=3)
+
+    conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
+    conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv7)
+
+
+    conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv7)
+
+    mdl = Model(inputs=inputs, outputs=conv8)
+
+    mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
+    if nb_gpu > 1:
+        mdl = multi_gpu_model(mdl, nb_gpu)
     return mdl
-
 
 def transformer3_pooling(ih, iw, nb_conv, size_conv):
 
@@ -230,9 +248,9 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv):
     conv7 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up2)
     conv7 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
-    up2 = concatenate([UpSampling2D(size=(2, 2))(conv7), conv1], axis=3)
+    up3 = concatenate([UpSampling2D(size=(2, 2))(conv7), conv1], axis=3)
 
-    conv8 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
+    conv8 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up3)
     conv8 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv8)
 
     conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv8)

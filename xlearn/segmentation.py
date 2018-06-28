@@ -57,10 +57,10 @@ def seg_train(img_x, img_y, patch_size = 32,
     mdl
         The trained CNN model for segmenation. The model can be saved for future segmentations.
     """
-    if img_x.ndim == 3:
-        _, ih, iw = img_x.shape
-    else:
-        ih, iw = img_x.shape
+    # if img_x.ndim == 3:
+    #     _, ih, iw = img_x.shape
+    # else:
+    #     ih, iw = img_x.shape
     patch_shape = (patch_size, patch_size)
     img_x = nor_data(img_x)
     img_y = nor_data(img_y)
@@ -70,7 +70,7 @@ def seg_train(img_x, img_y, patch_size = 32,
     train_y = extract_3d(img_y, patch_shape, patch_step)
     train_x = np.reshape(train_x, (len(train_x), patch_size, patch_size, 1))
     train_y = np.reshape(train_y, (len(train_y), patch_size, patch_size, 1))
-    mdl = model_choose(ih, iw, nb_conv, size_conv, nb_down)
+    mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down)
     print(mdl.summary())
     mdl.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch, shuffle=True)
     return mdl
