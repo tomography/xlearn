@@ -8,7 +8,7 @@ setup(
     author='Xiaogang Yang, Francesco De Carlo',
     packages=find_packages(),
     version=open('VERSION').read().strip(),
-    description = 'Convolutional Neural Network for X-ray Science.',
+    description = 'Deep Neural Networks for X-ray Science.',
     license='BSD-3',
     platforms='Any',
     classifiers=[
