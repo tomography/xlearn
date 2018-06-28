@@ -161,14 +161,12 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
-    fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), activation='relu', padding='same')(fc2)
-
-    up1 = concatenate([UpSampling2D(size=(2, 2))(fc2), conv2], axis=3)
+    up1 = UpSampling2D(size=(2, 2))(fc2)
 
     conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up1)
     conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv6)
 
-    up2 = concatenate([UpSampling2D(size=(2, 2))(conv6), conv1], axis=3)
+    up2 = UpSampling2D(size=(2, 2))(conv6)
 
     conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
     conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv7)

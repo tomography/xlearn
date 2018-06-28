@@ -20,6 +20,27 @@ def nor_data(img):
     mean_tmp = np.mean(img)
     std_tmp = np.std(img)
     img = (img - mean_tmp) / std_tmp
+
+    return img
+
+
+def reg_data(img):
+    """
+    Normalize the image
+
+    Parameters
+    ----------
+    img: array
+        The images need to be normalized
+
+    Returns
+    -------
+    img
+        Description.
+    """
+    mean_tmp = np.mean(img)
+    std_tmp = np.std(img)
+    img = (img - mean_tmp) / std_tmp
     img = (img - img.min())/(img.max()-img.min())
 
     return img
