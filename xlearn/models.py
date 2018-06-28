@@ -177,13 +177,14 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv7)
 
     mdl = Model(inputs=inputs, outputs=conv8)
-
-    mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
     if nb_gpu > 1:
         mdl = multi_gpu_model(mdl, nb_gpu)
+
+    mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
+
     return mdl
 
-def transformer3_pooling(ih, iw, nb_conv, size_conv):
+def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
 
     """
     The cnn image transformation model with 3 times of downsampling. The downsampling uses maxpooling.
@@ -256,6 +257,8 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv):
     conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv8)
 
     mdl = Model(inputs=inputs, outputs=conv8)
+    if nb_gpu > 1:
+        mdl = multi_gpu_model(mdl, nb_gpu)
 
     mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
     return mdl

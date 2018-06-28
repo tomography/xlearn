@@ -5,16 +5,16 @@ from utils import nor_data, extract_3d, reconstruct_patches
 from models import transformer2, transformer3_pooling
 
 
-def model_choose(ih, iw, nb_conv, size_conv, nb_down):
+def model_choose(ih, iw, nb_conv, size_conv, nb_down, nb_gpu):
     if nb_down == 3:
-        mdl = transformer3_pooling(ih, iw, nb_conv, size_conv)
+        mdl = transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu)
     else:
-        mdl = transformer2(ih, iw, nb_conv, size_conv)
+        mdl = transformer2(ih, iw, nb_conv, size_conv, nb_gpu)
     return mdl
 
 def seg_train(img_x, img_y, patch_size = 32,
                 patch_step = 1, nb_conv = 32, size_conv = 3,
-                batch_size =1000, nb_epoch = 20, nb_down = 2):
+                batch_size =1000, nb_epoch = 20, nb_down = 2, nb_gpu = 1):
     """
     Function description.
 
@@ -70,14 +70,14 @@ def seg_train(img_x, img_y, patch_size = 32,
     train_y = extract_3d(img_y, patch_shape, patch_step)
     train_x = np.reshape(train_x, (len(train_x), patch_size, patch_size, 1))
     train_y = np.reshape(train_y, (len(train_y), patch_size, patch_size, 1))
-    mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down)
+    mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down, nb_gpu)
     print(mdl.summary())
     mdl.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch, shuffle=True)
     return mdl
 
 def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
                   nb_conv=32, size_conv=3,
-                  batch_size=1000, nb_down=2):
+                  batch_size=1000, nb_down=2, nb_gpu = 1):
     """
     the cnn model for image transformation
 
@@ -127,7 +127,7 @@ def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
     img = nor_data(img)
     if img.ndim == 2:
         ih, iw = img.shape
-        mdl = model_choose(ih, iw, nb_conv, size_conv, nb_down)
+        mdl = model_choose(ih, iw, nb_conv, size_conv, nb_down, nb_gpu)
         predict_x = extract_3d(img, patch_shape, patch_step)
         predict_x = np.reshape(predict_x, (len(predict_x), patch_size, patch_size, 1))
         predict_y = mdl.predict(predict_x, batch_size=batch_size)
@@ -137,7 +137,7 @@ def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
         dxchange.write_tiff(predict_y, fname, dtype='float32')
     else:
         pn, ih, iw = img.shape
-        mdl = model_choose(ih, iw, nb_conv, size_conv, nb_down)
+        mdl = model_choose(ih, iw, nb_conv, size_conv, nb_down, nb_gpu)
         mdl.load_weights(wpath)
         for i in range(pn):
             print('Processing the %s th image' % i)
