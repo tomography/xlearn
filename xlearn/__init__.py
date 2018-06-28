@@ -51,6 +51,8 @@ from __future__ import (absolute_import, division, print_function,
 
 from xlearn.transform import *
 from xlearn.utils import *
+from xlearn.models import *
+from xlearn.segmentation import *
 
 try:
     import pkg_resources

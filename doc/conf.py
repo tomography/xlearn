@@ -31,8 +31,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'nbsphinx',
-    'IPython.sphinxext.ipython_console_highlighting',
-    'IPython.sphinxext.ipython_directive',
+#    'IPython.sphinxext.ipython_console_highlighting',
+#    'IPython.sphinxext.ipython_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
@@ -40,6 +40,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinxcontrib.bibtex',
     'sphinx.ext.viewcode']
+
 
 # Napoleon settings
 napoleon_google_docstring = True
@@ -331,6 +332,7 @@ MOCK_MODULES = ['numpy',
                 'scipy',
                 'matplotlib', 
                 'matplotlib.pyplot',
+                'dxchange',
                 'keras',
                 'keras.datasets',
                 'keras.models',
@@ -338,7 +340,14 @@ MOCK_MODULES = ['numpy',
                 'keras.layers.core',
                 'keras.layers.convolutional',
                 'keras.utils',
-                'keras.utils.visualize_util']
+                'keras.utils.visualize_util',
+                'tensorflow',
+                'tensorflow.python',
+                'tensorflow.python.keras',
+                'tensorflow.python.keras.models',
+                'tensorflow.python.keras.layers',
+                'tensorflow.python.keras.utils']
 
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
+

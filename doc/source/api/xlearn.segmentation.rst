@@ -1,5 +1,5 @@
 :mod:`xlearn.segmentation`
-======================
+==========================
 
 .. automodule:: xlearn.segmentation
    :members:
