@@ -101,7 +101,7 @@ def model(dim_img, nb_filters, nb_conv):
 
     mdl.add(Flatten())
     mdl.add(Dense(int(dim_img / 4) ** 2))
-    mdl.add(Reshape((1, int(dim_img / 4), int(dim_img / 4))))
+    mdl.add(Reshape((int(dim_img / 4), int(dim_img / 4), 1)))
 
     mdl.add(UpSampling2D(size=(2, 2)))
     mdl.add(Convolution2D(nb_filters * 2, (nb_conv, nb_conv), padding='same', activation='relu'))
@@ -173,7 +173,7 @@ def predict(mdl, img, patch_size, patch_step, batch_size, dim_img):
     img = np.float16(utils.nor_data(img))
     img_h, img_w = img.shape
     input_img = utils.extract_patches(img, patch_size, patch_step)
-    input_img_img = np.reshape(input_img, (input_img.shape[0], dim_img, dim_img, 1))
+    input_img = np.reshape(input_img, (input_img.shape[0], dim_img, dim_img, 1))
     output_img = mdl.predict(input_img, batch_size=batch_size)
     del input_img
     output_img = np.reshape(output_img, (output_img.shape[0], dim_img, dim_img))
