@@ -148,15 +148,13 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
 
     pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
 
-    conv3 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(pool2)
-    conv3 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv3)
+    conv3 = Conv2D(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(pool2)
     #
     fc1 = Flatten()(conv3)
     fc1 = Dense(iw * ih / 16)(fc1)
     fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
 
-    fc2 = Conv2D(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
-    up1 = UpSampling2D(size=(2, 2))(fc2)
+    up1 = UpSampling2D(size=(2, 2))(fc1)
 
     conv6 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up1)
     conv6 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv6)
@@ -166,14 +164,13 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     conv7 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
     conv7 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
-
-    conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv7)
+    conv8 = Conv2D(1, (3, 3), activation='relu', padding='same')(conv7)
 
     mdl = Model(inputs=inputs, outputs=conv8)
     if nb_gpu > 1:
         mdl = multi_gpu_model(mdl, nb_gpu)
 
-    mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
+    mdl.compile(loss='mse', optimizer='Adam')
 
     return mdl
 

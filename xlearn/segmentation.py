@@ -66,7 +66,6 @@ def seg_train(img_x, img_y, patch_size = 32,
     img_y = nor_data(img_y)
 
     train_x = extract_3d(img_x, patch_shape, patch_step)
-    print train_x.shape
     train_y = extract_3d(img_y, patch_shape, patch_step)
     train_x = np.reshape(train_x, (len(train_x), patch_size, patch_size, 1))
     train_y = np.reshape(train_y, (len(train_y), patch_size, patch_size, 1))
@@ -79,8 +78,7 @@ def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
                   nb_conv=32, size_conv=3,
                   batch_size=1000, nb_down=2, nb_gpu = 1):
     """
-    the cnn model for image transformation
-
+    Function description
 
     Parameters
     ----------
