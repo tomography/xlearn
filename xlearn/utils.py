@@ -101,8 +101,8 @@ def _compute_n_patches(i_h, i_w, p_h, p_w, step, max_patches=None):
     all_patches
         Description.
     """
-    n_h = (i_h - p_h) / step + 1
-    n_w = (i_w - p_w) / step + 1
+    n_h = (i_h - p_h) // step + 1
+    n_w = (i_w - p_w) // step + 1
     all_patches = n_h * n_w
 
     if max_patches:
@@ -238,7 +238,7 @@ def extract_patches(image, patch_size, step, max_patches=None, random_state=None
     # print patches.shape
     # remove the color dimension if useless
     if patches.shape[-1] == 1:
-        return patches.reshape((n_patches, p_h, p_w))
+        return patches.reshape((int(n_patches), p_h, p_w))
     else:
         return patches
 
