@@ -12,7 +12,7 @@ Documentation
 Installation
 ============
 
-* Detailed installation instructons can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
+* Detailed installation instructions can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
 
 
 APIs
