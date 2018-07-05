@@ -3,7 +3,7 @@ Xlearn
 ======
 
 .. image:: source/img/xlearn-logo.png
-   :width: 320px
+   :width: 640px
    :alt: xlearn
 
 
@@ -13,8 +13,9 @@ Features
 --------
 
 * Correction of instrument and beam instability artifacts
+* Low-dose image enhancement
 * Feature extraction, segmentation
-* ...
+* Super-resolution X-ray microscopy
 
 
 Contribute
@@ -22,7 +23,7 @@ Contribute
 
 * Documentation: https://github.com/tomography/xlearn/tree/master/doc
 * Issue Tracker: https://github.com/tomography/xlearn/docs/issues
-* Source Code: https://github.com/tomography/xlearn/project
+* Source Code: https://github.com/tomography/xlearn/tree/master/xlearn
 
 Content
 -------
@@ -31,8 +32,8 @@ Content
    :maxdepth: 1
 
    source/about
-   source/introduction
    source/install
    source/api
+   source/introduction
    source/demo
    source/credits
