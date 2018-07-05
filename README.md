@@ -13,7 +13,7 @@ Installation
    open a terminal or command prompt window and run:\
    git clone https://github.com/tomography/xlearn.git xlearn\
    cd xlearn\
-   python setup.py install\
+   python setup.py install
 
 APIs
 ====

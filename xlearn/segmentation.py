@@ -81,7 +81,7 @@ def seg_train(img_x, img_y, patch_size = 32,
     img_x: array, 2D or 3D
         Training input of the model. It is the raw image for the segmentation.
 
-    img_y: images, 2D or 3D
+    img_y: array, 2D or 3D
         Training output of the model. It is the corresponding segmentation of the training input.
 
     patch_size: int
@@ -108,6 +108,9 @@ def seg_train(img_x, img_y, patch_size = 32,
 
     nb_down: int
           Number of the downsampling for the images in the model.
+
+    nb_gpu: int
+          Number of GPUs you want to use for the training.
 
 
     Returns
@@ -179,10 +182,13 @@ def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
 
     nb_down: int
           Number of the downsampling for the images in the model.
+
+    nb_gpu: int
+          Number of GPUs you want to use for the training.
+
     Returns
     -------
-    y_img
-        Description.
+    save the segmented images to the spath.
 
       """
     patch_shape = (patch_size, patch_size)
