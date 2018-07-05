@@ -2,15 +2,18 @@
 About
 =====
 
-`Xlearn <https://github.com/tomography/xlearn>`_ implements Computational Neural Network to
+`Xlearn <https://github.com/tomography/xlearn>`_ implements Deep Neural Network to
 X-ray science imaging problems including:
 
-* Correction of instrument and beam instability artifacts
+* Tomography rotation axis calibration :cite:`RN93`.
   
-  Tomographic reconstructions often contains various types of artefacts due to misalignment, instrument instabilities, detector non linear response, bright spot in the projection images etc. `Xlearn <https://github.com/tomography/xlearn>`_ implements Computational Neural Network to reduce or mitigate tomographic reconstruction artefacts.
+* Low-dose image enhancement :cite:`RN140`.
 
+* Feature extraction, segmentation :cite:`RN155`.
 
-* Feature extraction, segmentation
+* Super-resolution X-ray microscopy (will update later).
+
+* Solving inverse problems with deep learning, such as tomography reconstruction and phase retrieval (will update late).
 
 
 
