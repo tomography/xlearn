@@ -7,18 +7,18 @@ Features
 Documentation
 =============
 
-* Documentation of this project can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/>`_
+* Documentation of this project can be found at `readthedocs <http://xlearn.readthedocs.io/en/latest/>`_
 
 Installation
 ============
 
-* Detailed installation instructions can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
+* Detailed installation instructions can be found at `readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
 
 
 APIs
 ====
 
-* The API can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/api.html>`_
+* The API documentation can be found at `readthedocs <http://xlearn.readthedocs.io/en/latest/source/api.html>`_
 
 
 Contribute
