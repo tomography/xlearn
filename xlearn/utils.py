@@ -238,7 +238,7 @@ def extract_patches(image, patch_size, step, max_patches=None, random_state=None
     # print patches.shape
     # remove the color dimension if useless
     if patches.shape[-1] == 1:
-        return patches.reshape((int(n_patches), p_h, p_w))
+        return patches.reshape(n_patches, p_h, p_w)
     else:
         return patches
 
