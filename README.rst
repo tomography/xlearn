@@ -12,13 +12,13 @@ Documentation
 Installation
 ============
 
-* Detailed installation instructons can be found on readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
+* Detailed installation instructons can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/install.html>`_
 
 
 APIs
 ====
 
-* The API can be found on readthedocs <http://xlearn.readthedocs.io/en/latest/source/api.html>`_
+* The API can be found on `readthedocs <http://xlearn.readthedocs.io/en/latest/source/api.html>`_
 
 
 Contribute
