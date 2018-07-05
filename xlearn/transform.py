@@ -61,8 +61,8 @@ import xlearn.utils as utils
 
 
 __authors__ = "Xiaogang Yang, Francesco De Carlo"
-__copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
-__version__ = "0.1.0"
+__copyright__ = "Copyright (c) 2018, Argonne National Laboratory"
+__version__ = "0.2.0"
 __docformat__ = "restructuredtext en"
 __all__ = ['model',
            'train',
