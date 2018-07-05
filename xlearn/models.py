@@ -56,6 +56,11 @@ from tensorflow.python.keras.layers import Dense, Reshape, Flatten, \
     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
 from tensorflow.python.keras.utils import multi_gpu_model
 
+# from keras.models import Sequential, Model
+# from keras.layers import Dense, Reshape, Flatten, \
+#     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
+# from keras.utils import multi_gpu_model
+
 __authors__ = "Xiaogang Yang, Francesco De Carlo"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
 __version__ = "0.2.0"
@@ -154,17 +159,18 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     fc1 = Dense(iw * ih / 16)(fc1)
     fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
 
-    up1 = UpSampling2D(size=(2, 2))(fc1)
+    conv4 = Conv2D(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
+    up1 = UpSampling2D(size=(2, 2))(conv4)
 
-    conv6 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up1)
-    conv6 = Conv2D(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv6)
+    conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(up1)
+    conv6 = Conv2DTranspose(nb_conv * 2, (size_conv, size_conv), activation='relu', padding='same')(conv6)
 
     up2 = UpSampling2D(size=(2, 2))(conv6)
 
-    conv7 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
-    conv7 = Conv2D(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv7)
+    conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(up2)
+    conv7 = Conv2DTranspose(nb_conv, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
-    conv8 = Conv2D(1, (3, 3), activation='relu', padding='same')(conv7)
+    conv8 = Conv2DTranspose(1, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
     mdl = Model(inputs=inputs, outputs=conv8)
     if nb_gpu > 1:
@@ -250,7 +256,7 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     if nb_gpu > 1:
         mdl = multi_gpu_model(mdl, nb_gpu)
 
-    mdl.compile(loss='mse', optimizer='Adam', metrics=['accuracy'])
+    mdl.compile(loss='mse', optimizer='Adam')
     return mdl
 
 

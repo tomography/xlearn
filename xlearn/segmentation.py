@@ -1,9 +1,9 @@
 import numpy as np
 import time
 import dxchange
-from utils import nor_data, extract_3d, reconstruct_patches
-from models import transformer2, transformer3_pooling
-
+from xlearn.utils import nor_data, extract_3d, reconstruct_patches
+from xlearn.models import transformer2, transformer3_pooling
+from xlearn.transform import model
 
 def model_choose(ih, iw, nb_conv, size_conv, nb_down, nb_gpu):
     if nb_down == 3:
@@ -62,16 +62,23 @@ def seg_train(img_x, img_y, patch_size = 32,
     # else:
     #     ih, iw = img_x.shape
     patch_shape = (patch_size, patch_size)
+    print img_x.shape
+    print img_x.max(), img_x.min()
     img_x = nor_data(img_x)
     img_y = nor_data(img_y)
+    print img_x.shape
+    print img_x.max(), img_x.min()
 
     train_x = extract_3d(img_x, patch_shape, patch_step)
     train_y = extract_3d(img_y, patch_shape, patch_step)
+    print train_x.shape
+    print train_x.max(), train_x.min()
     train_x = np.reshape(train_x, (len(train_x), patch_size, patch_size, 1))
     train_y = np.reshape(train_y, (len(train_y), patch_size, patch_size, 1))
     mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down, nb_gpu)
+    # mdl = model(patch_size, nb_conv, size_conv)
     print(mdl.summary())
-    mdl.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch, shuffle=True)
+    mdl.fit(train_x, train_y, batch_size=batch_size, epochs=nb_epoch)
     return mdl
 
 def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
@@ -122,21 +129,22 @@ def seg_predict(img, wpath, spath, patch_size = 32, patch_step = 1,
 
       """
     patch_shape = (patch_size, patch_size)
-    img = nor_data(img)
+    img = np.float32(nor_data(img))
+    mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down, nb_gpu)
+    print(mdl.summary())
+    mdl.load_weights(wpath)
     if img.ndim == 2:
         ih, iw = img.shape
-        mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down, nb_gpu)
         predict_x = extract_3d(img, patch_shape, patch_step)
-        predict_x = np.reshape(predict_x, (len(predict_x), patch_size, patch_size, 1))
+        predict_x = np.reshape(predict_x, (predict_x.shape[0], patch_size, patch_size, 1))
         predict_y = mdl.predict(predict_x, batch_size=batch_size)
-        predict_y = np.reshape(predict_y, (len(predict_y),patch_size, patch_size))
+        predict_y = np.reshape(predict_y, (predict_y.shape[0],patch_size, patch_size))
         predict_y = reconstruct_patches(predict_y, (ih, iw), patch_step)
         fname = spath + 'prd'
         dxchange.write_tiff(predict_y, fname, dtype='float32')
+
     else:
         pn, ih, iw = img.shape
-        mdl = model_choose(patch_size, patch_size, nb_conv, size_conv, nb_down, nb_gpu)
-        mdl.load_weights(wpath)
         for i in range(pn):
             print('Processing the %s th image' % i)
             tstart = time.time()
