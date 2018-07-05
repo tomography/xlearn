@@ -33,5 +33,5 @@ License
 =======
 
 * The project is licensed under the
-`BSD-3 <https://github.com/tomopy/tomopy/blob/master/LICENSE.txt>` license.
+`BSD-3 <https://github.com/tomopy/tomopy/blob/master/LICENSE.txt>`_ license.
 
