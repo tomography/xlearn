@@ -24,10 +24,10 @@ APIs
 Contribute
 ==========
 
-* Issue Tracker: https://github.com/tomography/xlearn/issues
-* Documentation: https://github.com/tomography/xlearn/tree/master/doc
-* Source Code: https://github.com/tomography/xlearn/tree/master/xlearn
-* Tests: https://github.com/tomography/xlearn/tree/master/doc/demo
+* `Issue Tracker <https://github.com/tomography/xlearn/issues>`_
+* `Documentation <https://github.com/tomography/xlearn/tree/master/doc>`_
+* `Source Code <https://github.com/tomography/xlearn/tree/master/xlearn>`_
+* `Tests <https://github.com/tomography/xlearn/tree/master/doc/demo>`_
 
 License
 =======
