@@ -1,6 +1,6 @@
-================
-CNN Introduction
-================
+============
+Introduction
+============
 
 Machine learning is a robust solution to mimic human's estimations and predictions for complex data problems :cite:`RN66`. Convolutional neural network (CNN) :cite:`RN54` is an efficient and universal algorithm in the family of machine learning for image processing. It processes the feature of image pattern, rather than the value of each pixel as with classical methods. Its accuracy and efficiency for image recognition and classification have been proved from various applications :cite:`RN62`, :cite:`RN49`, :cite:`RN55`, :cite:`RN64`. The specially designed architecture of CNN also works for supervised transformation of image style :cite:`Gatys`.
 

@@ -118,3 +118,4 @@ validate*
 workingOn/
 #rec_*
 .idea
+*.h5
