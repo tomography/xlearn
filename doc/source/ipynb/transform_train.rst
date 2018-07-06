@@ -10,15 +10,6 @@ raw images.
 You can download the python scritp :download:`here<../../../doc/demo/transform_train.py>`
 or the Jupyter notebook :download:`here<../../../doc/demo/transform_train.ipynb>`
 
-.. code:: python
-
-    %pylab inline
-
-
-.. parsed-literal::
-
-    Populating the interactive namespace from numpy and matplotlib
-
 
 .. code:: python
 

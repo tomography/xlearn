@@ -18,16 +18,6 @@ To run this example please download the test data from the classify_train folder
 
 .. code:: python
 
-    %pylab inline
-
-
-.. parsed-literal::
-
-    Populating the interactive namespace from numpy and matplotlib
-
-
-.. code:: python
-
     import dxchange
     import numpy as np
     from xlearn.utils import nor_data
