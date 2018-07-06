@@ -1,7 +1,7 @@
 Features
 ========
 
-* Deep learning toolbox for X-ray imaging problems.
+* `Xlearn <https://github.com/tomography/xlearn>`_ is a Deep learning toolbox for X-ray imaging problems.
 
 
 Documentation
