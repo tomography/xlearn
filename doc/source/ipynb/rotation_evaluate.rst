@@ -13,15 +13,6 @@ or the Jupyter notebook :download:`here<../../../doc/demo/classify_evaluate.ipyn
 To run this example please download the test data from the classify_evaluate folder at 
 `url <http://tinyurl.com/APS-convnet>`_ 
 
-.. code:: python
-
-    %pylab inline
-
-
-.. parsed-literal::
-
-    Populating the interactive namespace from numpy and matplotlib
-
 
 .. code:: python
 
