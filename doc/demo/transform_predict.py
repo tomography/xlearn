@@ -19,7 +19,7 @@ patch_size = (dim_img, dim_img)
 spath = '../../test/test_data/'
 
 mdl = model(dim_img, nb_filters, nb_conv)
-mdl.load_weights(spath + 'transform_training_weights.h5')
+mdl.load_weights('transform_training_weights.h5')
 
 print('Predicting')
 
