@@ -5,7 +5,7 @@ import dxchange
 batch_size = 4000
 nb_epoch = 50
 nb_down = 3
-nb_gpu = 0
+nb_gpu = 4
 
 # define the data path
 spath = '../../test/seg_data/'
