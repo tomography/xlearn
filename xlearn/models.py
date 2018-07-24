@@ -158,7 +158,7 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     #
     fc1 = Flatten()(conv3)
     fc1 = Dense(iw * ih / 16)(fc1)
-    fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
+    fc1 = Reshape((ih // 4, iw // 4, 1))(fc1)
 
     conv4 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
 
@@ -232,7 +232,7 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     fc1 = Dropout(0.25)(fc1)
     fc1 = Dense(iw * ih / 64, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((int(ih / 8), int(iw / 8), 1))(fc1)
+    fc1 = Reshape((int(ih // 8), int(iw // 8), 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), activation='relu', padding='same')(fc2)
@@ -309,7 +309,7 @@ def transformer3_super(ih, iw, nb_conv, size_conv):
     fc1 = Dropout(0.25)(fc1)
     fc1 = Dense(iw * ih / 64, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((ih / 8, iw / 8, 1))(fc1)
+    fc1 = Reshape((ih // 8, iw // 8, 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), trides=(2, 2), activation='relu', padding='same')(fc2)
@@ -378,7 +378,7 @@ def transformer3_direct(ih, iw, nb_conv, size_conv):
     fc1 = Dropout(0.2)(fc1)
     fc1 = Dense(iw * ih / 16, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
+    fc1 = Reshape((ih // 4, iw // 4, 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv),
