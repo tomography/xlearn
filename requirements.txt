@@ -1,6 +1,5 @@
-python
 numpy
-tensorflow
+tensorflow==1.15
 keras
 scipy
-
+scikit-image
