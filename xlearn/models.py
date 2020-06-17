@@ -55,7 +55,8 @@ import tensorflow as tf
 from tensorflow.python.keras.models import Sequential, Model
 from tensorflow.python.keras.layers import Dense, Reshape, Flatten, \
     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
-from tensorflow.python.keras.utils import multi_gpu_model
+
+# from tensorflow.python.keras.utils import multi_gpu_model
 
 # from keras.models import Sequential, Model
 # from keras.layers import Dense, Reshape, Flatten, \
@@ -175,8 +176,8 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     conv8 = Conv2DTranspose(1, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
     mdl = Model(inputs=inputs, outputs=conv8)
-    if nb_gpu > 1:
-        mdl = multi_gpu_model(mdl, nb_gpu)
+    # if nb_gpu > 1:
+    #     mdl = multi_gpu_model(mdl, nb_gpu)
 
     mdl.compile(loss='mse', optimizer='Adam')
 
@@ -255,8 +256,8 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv8)
 
     mdl = Model(inputs=inputs, outputs=conv8)
-    if nb_gpu > 1:
-        mdl = multi_gpu_model(mdl, nb_gpu)
+    # if nb_gpu > 1:
+    #     mdl = multi_gpu_model(mdl, nb_gpu)
 
     mdl.compile(loss='mse', optimizer='Adam')
     return mdl

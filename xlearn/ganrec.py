@@ -1,5 +1,6 @@
 from __future__ import  absolute_import, division, print_function
 import tensorflow as tf
+from tensorflow.python.framework import ops
 from tensorflow.python.keras import Model, layers
 import sys
 import numpy as np
@@ -744,7 +745,7 @@ def rec_dcgan_back(prj, ang, save_wpath, init_wpath = None, **kwargs):
     return recon
 
 def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
-    tf.reset_default_graph()
+    ops.reset_default_graph()
     cnn_kwargs = ['learning_rate', 'num_steps', 'display_step', 'conv_nb', 'conv_size',
                   'dropout', 'weights_init', 'method','cost_rate', 'gl_tol']
     kwargs_defaults = _get_tomolearn_kwargs()
