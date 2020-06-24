@@ -80,6 +80,13 @@ def nor_data(img):
 
     return img
 
+def nor_prj(img):
+    mean_sum = np.mean(np.sum(img, axis=1))
+    data_corr = np.zeros_like(img)
+    for i in range(len(img)):
+        data_corr[i, :] = img[i, :] * mean_sum / np.sum(img[i, :])
+    return data_corr
+
 
 def mlog(img):
     img = nor_data(img)
@@ -404,4 +411,21 @@ def extract_3d(img, patch_size, step):
             patches = np.concatenate((patches, patches_tmp), axis=0)
     return patches
 
-
+def center(prj, cen):
+    if prj.ndim == 3:
+        _, _, px = prj.shape
+        cen_diff = px // 2 - cen
+        if cen_diff > 0:
+            prj = prj[:, :, :-cen_diff * 2]
+        if cen_diff < 0:
+            prj = prj[:, :, -cen_diff * 2:]
+        prj = np.pad(prj, ((0, 0,), (0, 0), (np.abs(cen_diff), np.abs(cen_diff))), 'constant')
+    else:
+        _, px = prj.shape
+        cen_diff = px // 2 - cen
+        if cen_diff > 0:
+            prj = prj[:, :-cen_diff * 2]
+        if cen_diff < 0:
+            prj = prj[:, -cen_diff * 2:]
+        prj = np.pad(prj, ((0, 0), (np.abs(cen_diff), np.abs(cen_diff))), 'constant')
+    return prj
