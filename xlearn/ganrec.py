@@ -423,29 +423,6 @@ def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
                     ######################################################################
                     print("Step " + str(step) + ", Generator Loss= " + "{:.7f}".format(gl) +
                           ', Discriminator loss = ' + "{:.7f}".format(dl))
-            # if step % kwargs['display_step'] == 0 or step == 1:
-            #     pred, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
-            #                                       conv_size=kwargs['conv_size'],
-            #                                       dropout=kwargs['dropout'],
-            #                                       method=kwargs['method']))
-            # ###########################################################
-            #     sino_plt = np.reshape(pred, (nang, px))
-            #     sino_plt = np.abs(sino_plt-prj.reshape((nang, px)))
-            #     rec_plt = np.reshape(recon, (px, px))
-            #     tx1.set_text('Difference of sinogram for iteration {0}'.format(step))
-            #     vmax = np.max(sino_plt)
-            #     vmin = np.min(sino_plt)
-            #     im1.set_data(sino_plt)
-            #     im1.set_clim(vmin, vmax)
-            #     im2.set_data(rec_plt)
-            #     vmax = np.max(rec_plt)
-            #     vmin = np.min(rec_plt)
-            #     im2.set_clim(vmin, vmax)
-            #     axs[1, 1].plot(xdata, g_loss,'r-')
-            #     plt.pause(0.1)
-            # ######################################################################
-            #     print("Step " + str(step) + ", Generator Loss= " + "{:.7f}".format(gl) +
-            #           ', Discriminator loss = '+ "{:.7f}".format(dl))
             if gl<kwargs['gl_tol']:
                 _, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
                                                conv_size=kwargs['conv_size'],
