@@ -316,7 +316,7 @@ def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
     ops.reset_default_graph()
     tf.compat.v1.disable_eager_execution()
     cnn_kwargs = ['learning_rate', 'num_steps', 'display_step', 'conv_nb', 'conv_size',
-                  'dropout', 'weights_init', 'method','cost_rate', 'gl_tol']
+                  'dropout', 'weights_init', 'method','cost_rate', 'gl_tol', 'iter_plot']
     kwargs_defaults = _get_tomolearn_kwargs()
     for kw in cnn_kwargs:
         kwargs.setdefault(kw, kwargs_defaults[kw])
@@ -355,27 +355,25 @@ def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
 
     train_gen = optimizer_gen.minimize(gen_loss, var_list=gen_vars)
     train_disc = optimizer_disc.minimize(disc_loss, var_list=disc_vars)
-
-
-
  ######################################################################
- # plots for debug
-    fig, axs = plt.subplots(2, 2, figsize=(16, 8))
-    im0 = axs[0, 0].imshow(prj.reshape(nang, px), cmap='jet')
-    tx0 = axs[0, 0].set_title('Sinogram')
-    fig.colorbar(im0, ax=axs[0, 0])
-    tx1 = axs[1, 0].set_title('Difference of sinogram for iteration 0')
-    im1 = axs[1, 0].imshow(prj.reshape(nang, px), cmap='jet')
-    fig.colorbar(im1, ax=axs[1, 0])
-    im2 = axs[0, 1].imshow(np.zeros((px, px)), cmap='jet')
-    fig.colorbar(im2, ax=axs[0, 1])
-    tx2 = axs[0, 1].set_title('Reconstruction')
-    xdata, g_loss = [], []
-    im3, = axs[1, 1].plot(xdata, g_loss)
-    tx3 = axs[1, 1].set_title('Generator loss')
-    plt.tight_layout()
+ # # plots for debug
+    if kwargs['iter_plot']:
+        fig, axs = plt.subplots(2, 2, figsize=(16, 8))
+        im0 = axs[0, 0].imshow(prj.reshape(nang, px), cmap='jet')
+        tx0 = axs[0, 0].set_title('Sinogram')
+        fig.colorbar(im0, ax=axs[0, 0])
+        tx1 = axs[1, 0].set_title('Difference of sinogram for iteration 0')
+        im1 = axs[1, 0].imshow(prj.reshape(nang, px), cmap='jet')
+        fig.colorbar(im1, ax=axs[1, 0])
+        im2 = axs[0, 1].imshow(np.zeros((px, px)), cmap='jet')
+        fig.colorbar(im2, ax=axs[0, 1])
+        tx2 = axs[0, 1].set_title('Reconstruction')
+        xdata, g_loss = [], []
+        im3, = axs[1, 1].plot(xdata, g_loss, 'r-')
+        tx3 = axs[1, 1].set_title('Generator loss')
+        plt.tight_layout()
 #########################################################################
-
+    # ani_init()
     rec_tmp = tf.zeros([1, px, px, 1])
 
     init = tf.compat.v1.global_variables_initializer()
@@ -394,37 +392,60 @@ def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
                                  feed_dict={img_input: prj, img_output: prj})
             with tf.device('/device:GPU:2'):
                 gl, _ = sess.run([gen_loss, train_gen], feed_dict={img_input: prj, img_output: prj})
-            xdata.append(step)
-            g_loss.append(gl)
+
             if np.isnan(gl):
+                # gl = np.mean(g_loss)
                 sess.run(init)
-
-            if step % kwargs['display_step'] == 0 or step == 1:
-                pred, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
-                                                  conv_size=kwargs['conv_size'],
-                                                  dropout=kwargs['dropout'],
-                                                  method=kwargs['method']))
-            ###########################################################
-                sino_plt = np.reshape(pred, (nang, px))
-                sino_plt = np.abs(sino_plt-prj.reshape((nang, px)))
-                rec_plt = np.reshape(recon, (px, px))
-                tx1.set_text('Difference of sinogram for iteration {0}'.format(step))
-                vmax = np.max(sino_plt)
-                vmin = np.min(sino_plt)
-                im1.set_data(sino_plt)
-                im1.set_clim(vmin, vmax)
-                im2.set_data(rec_plt)
-                vmax = np.max(rec_plt)
-                vmin = np.min(rec_plt)
-                im2.set_clim(vmin, vmax)
-                im3.set_xdata(xdata)
-                im3.set_ydata(g_loss)
-                plt.pause(0.1)
-                # print(g_loss, xdata)
-
-            ######################################################################
-                print("Step " + str(step) + ", Generator Loss= " + "{:.7f}".format(gl) +
-                      ', Discriminator loss = '+ "{:.7f}".format(dl))
+            if kwargs['iter_plot']:
+                xdata.append(step)
+                g_loss.append(gl)
+            # print(g_loss)
+                if step % kwargs['display_step'] == 0 or step == 1:
+                    pred, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
+                                                      conv_size=kwargs['conv_size'],
+                                                      dropout=kwargs['dropout'],
+                                                      method=kwargs['method']))
+                    ###########################################################
+                    sino_plt = np.reshape(pred, (nang, px))
+                    sino_plt = np.abs(sino_plt - prj.reshape((nang, px)))
+                    rec_plt = np.reshape(recon, (px, px))
+                    tx1.set_text('Difference of sinogram for iteration {0}'.format(step))
+                    vmax = np.max(sino_plt)
+                    vmin = np.min(sino_plt)
+                    im1.set_data(sino_plt)
+                    im1.set_clim(vmin, vmax)
+                    im2.set_data(rec_plt)
+                    vmax = np.max(rec_plt)
+                    vmin = np.min(rec_plt)
+                    im2.set_clim(vmin, vmax)
+                    axs[1, 1].plot(xdata, g_loss, 'r-')
+                    plt.pause(0.1)
+                    ######################################################################
+                    print("Step " + str(step) + ", Generator Loss= " + "{:.7f}".format(gl) +
+                          ', Discriminator loss = ' + "{:.7f}".format(dl))
+            # if step % kwargs['display_step'] == 0 or step == 1:
+            #     pred, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
+            #                                       conv_size=kwargs['conv_size'],
+            #                                       dropout=kwargs['dropout'],
+            #                                       method=kwargs['method']))
+            # ###########################################################
+            #     sino_plt = np.reshape(pred, (nang, px))
+            #     sino_plt = np.abs(sino_plt-prj.reshape((nang, px)))
+            #     rec_plt = np.reshape(recon, (px, px))
+            #     tx1.set_text('Difference of sinogram for iteration {0}'.format(step))
+            #     vmax = np.max(sino_plt)
+            #     vmin = np.min(sino_plt)
+            #     im1.set_data(sino_plt)
+            #     im1.set_clim(vmin, vmax)
+            #     im2.set_data(rec_plt)
+            #     vmax = np.max(rec_plt)
+            #     vmin = np.min(rec_plt)
+            #     im2.set_clim(vmin, vmax)
+            #     axs[1, 1].plot(xdata, g_loss,'r-')
+            #     plt.pause(0.1)
+            # ######################################################################
+            #     print("Step " + str(step) + ", Generator Loss= " + "{:.7f}".format(gl) +
+            #           ', Discriminator loss = '+ "{:.7f}".format(dl))
             if gl<kwargs['gl_tol']:
                 _, recon = sess.run(tomo_learn(prj, ang, px, reuse=True, conv_nb=kwargs['conv_nb'],
                                                conv_size=kwargs['conv_size'],
@@ -537,7 +558,25 @@ def _get_tomolearn_kwargs():
         'method': 'backproj',
         'cost_rate':100,
         'gl_tol': 1.0,
+        'iter_plot': True
     }
+
+# def ani_init(prj, nang, px):
+#     fig, axs = plt.subplots(2, 2, figsize=(16, 8))
+#     im0 = axs[0, 0].imshow(prj.reshape(nang, px), cmap='jet')
+#     tx0 = axs[0, 0].set_title('Sinogram')
+#     fig.colorbar(im0, ax=axs[0, 0])
+#     tx1 = axs[1, 0].set_title('Difference of sinogram for iteration 0')
+#     im1 = axs[1, 0].imshow(prj.reshape(nang, px), cmap='jet')
+#     fig.colorbar(im1, ax=axs[1, 0])
+#     im2 = axs[0, 1].imshow(np.zeros((px, px)), cmap='jet')
+#     fig.colorbar(im2, ax=axs[0, 1])
+#     tx2 = axs[0, 1].set_title('Reconstruction')
+#     xdata, g_loss = [], []
+#     im3, = axs[1, 1].plot(xdata, g_loss, 'r-')
+#     tx3 = axs[1, 1].set_title('Generator loss')
+#     plt.tight_layout()
+#     return fig, axs, xdata, g_loss
 
 def angles(nang, ang1=0., ang2=180.):
     return np.linspace(ang1 * np.pi / 180., ang2 * np.pi / 180., nang)
