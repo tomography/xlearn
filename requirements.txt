@@ -1,5 +1,5 @@
 numpy
-tensorflow==1.15
+tensorflow==2.4.0
 keras
 scipy
 scikit-image
