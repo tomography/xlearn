@@ -52,6 +52,7 @@ Module containing model, predict and train routines
 
 from __future__ import print_function
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.python.keras.models import Sequential, Model
 from tensorflow.python.keras.layers import Dense, Reshape, Flatten, \
     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
@@ -123,7 +124,7 @@ def classifier(ih, iw, nb_conv, size_conv, nb_classes):
     return mdl
 
 
-def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
+def transformer2(ih, iw, nb_conv, size_conv, lr):
     """
     The simple cnn model for image transformation with 2 times of downsampling. It is a choice for fast running.
     However, it will lose resolution during the transformation.
@@ -178,12 +179,12 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     mdl = Model(inputs=inputs, outputs=conv8)
     # if nb_gpu > 1:
     #     mdl = multi_gpu_model(mdl, nb_gpu)
-
-    mdl.compile(loss='mse', optimizer='Adam')
+    opt = keras.optimizers.Adam(learning_rate=lr)
+    mdl.compile(loss='mse', optimizer=opt)
 
     return mdl
 
-def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
+def transformer3_pooling(ih, iw, nb_conv, size_conv, lr):
 
     """
     The cnn image transformation model with 3 times of downsampling. The downsampling uses maxpooling.
@@ -259,7 +260,8 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     # if nb_gpu > 1:
     #     mdl = multi_gpu_model(mdl, nb_gpu)
 
-    mdl.compile(loss='mse', optimizer='Adam')
+    opt = keras.optimizers.Adam(learning_rate=lr)
+    mdl.compile(loss='mse', optimizer=opt)
     return mdl
 
 

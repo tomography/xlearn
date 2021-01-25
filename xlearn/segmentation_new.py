@@ -49,7 +49,6 @@
 Module containing model_choose, seg_train and seg_predict routines
 """
 import numpy as np
-import tensorflow as tf
 import time
 from skimage import io
 import dxchange
@@ -73,8 +72,7 @@ def _get_seg_kwargs():
         'batch_size': 1000,
         'epoch_nb': 20,
         'model_layers': 2,
-        'lr': 1e-3,
-        'nor_slice': False
+        'gpu_nb': 1,
     }
 
 def seg_train(img_x, img_y, **kwargs):
@@ -124,10 +122,8 @@ def seg_train(img_x, img_y, **kwargs):
         The trained CNN model for segmenation. The model can be saved for future segmentations.
     """
     seg_kwargs = ['patch_size', 'patch_step', 'conv_nb', 'conv_size', 'batch_size',
-                  'epoch_nb', 'model_layers', 'lr']
+                  'epoch_nb', 'model_layers', 'gpu_nb']
     kwargs_defaults = _get_seg_kwargs()
-    strategy = tf.distribute.MirroredStrategy()
-    print("Number of devices: {}".format(strategy.num_replicas_in_sync))
     for kw in seg_kwargs:
         kwargs.setdefault(kw, kwargs_defaults[kw])
     patch_shape = (kwargs['patch_size'], kwargs['patch_size'])
@@ -135,10 +131,8 @@ def seg_train(img_x, img_y, **kwargs):
     # print img_x.max(), img_x.min()
     img_x = nor_data(img_x)
     img_y = nor_data(img_y)
-    # print(img_x.shape)
-    # print(img_x.max(), img_x.min())
-    # print(img_y.max(), img_y.min())
-
+    # print img_x.shape
+    # print img_x.max(), img_x.min()
 
     train_x = extract_3d(img_x, patch_shape, kwargs['patch_step'])
     train_y = extract_3d(img_y, patch_shape, kwargs['patch_step'])
@@ -146,13 +140,10 @@ def seg_train(img_x, img_y, **kwargs):
     # print train_x.max(), train_x.min()
     train_x = np.reshape(train_x, (len(train_x), kwargs['patch_size'], kwargs['patch_size'], 1))
     train_y = np.reshape(train_y, (len(train_y), kwargs['patch_size'], kwargs['patch_size'], 1))
-    with strategy.scope():
-        mdl = model_choose(kwargs['patch_size'], kwargs['patch_size'], kwargs['conv_nb'], kwargs['conv_size'],
-                           kwargs['model_layers'], kwargs['lr'])
-
-
-    # print(mdl.summary())
-    mdl.fit(train_x, train_y, batch_size=kwargs['batch_size'], epochs=kwargs['epoch_nb'])
+    mdl = model_choose(kwargs['patch_size'], kwargs['patch_size'], kwargs['conv_nb'], kwargs['conv_size'],
+                       kwargs['model_layers'], kwargs['gpu_nb'])
+    print(mdl.summary())
+    mdl.fit(train_x, train_y, batch_size=kwargs['batch_size'], epochs=kwargs['nb_epoch'])
     return mdl
 
 def seg_predict(img, wpath, spath, **kwargs):
@@ -204,20 +195,14 @@ def seg_predict(img, wpath, spath, **kwargs):
 
       """
     seg_kwargs = ['patch_size', 'patch_step', 'conv_nb', 'conv_size', 'batch_size',
-                  'epoch_nb', 'model_layers', 'lr', 'nor_slice']
+                  'epoch_nb', 'model_layers', 'gpu_nb']
     kwargs_defaults = _get_seg_kwargs()
     for kw in seg_kwargs:
         kwargs.setdefault(kw, kwargs_defaults[kw])
-    strategy = tf.distribute.MirroredStrategy()
-    print("Number of devices: {}".format(strategy.num_replicas_in_sync))
     patch_shape = (kwargs['patch_size'], kwargs['patch_size'])
     img = np.float32(nor_data(img))
     mdl = model_choose(kwargs['patch_size'], kwargs['patch_size'], kwargs['conv_nb'],
-                       kwargs['conv_size'], kwargs['model_layers'], kwargs['lr'])
-    # with strategy.scope():
-    #     mdl = model_choose(kwargs['patch_size'], kwargs['patch_size'], kwargs['conv_nb'],
-    #                        kwargs['conv_size'], kwargs['model_layers'], kwargs['gpu_nb'])
-
+                       kwargs['conv_size'], kwargs['model_layers'], kwargs['gpu_nb'])
     # print(mdl.summary())
     mdl.load_weights(wpath)
     if img.ndim == 2:
@@ -232,8 +217,6 @@ def seg_predict(img, wpath, spath, **kwargs):
             print('Processing the %s th image' % i)
             tstart = time.time()
             predict_x = img[i]
-            if nor_slice:
-                predict_x=nor_data(predict_x)
             predict_y = pred_single(mdl, predict_x, ih, iw, patch_shape, kwargs['patch_step'],
                                     kwargs['patch_size'], kwargs['batch_size'])
             predict_y = np.float32(predict_y)
@@ -241,11 +224,11 @@ def seg_predict(img, wpath, spath, **kwargs):
             dxchange.write_tiff(predict_y, fname, dtype='float32')
             print('The prediction runs for %s seconds' % (time.time() - tstart))
 
-def model_choose(ih, iw, conv_nb, conv_size, model_layers, lr):
+def model_choose(ih, iw, conv_nb, conv_size, model_layers, gpu_nb):
     if model_layers == 3:
-        mdl = transformer3_pooling(ih, iw, conv_nb, conv_size, lr)
+        mdl = transformer3_pooling(ih, iw, conv_nb, conv_size, gpu_nb)
     else:
-        mdl = transformer2(ih, iw, conv_nb, conv_size, lr)
+        mdl = transformer2(ih, iw, conv_nb, conv_size, gpu_nb)
     return mdl
 
 def pred_single(mdl, predict_x, ih, iw, patch_shape, patch_step, patch_size, batch_size):

@@ -7,14 +7,12 @@ from tensorflow.python.framework import ops
 from xlearn.utils import nor_data
 import matplotlib.pyplot as plt
 
-
-
 def dense_norm(x, nb_nodes, dropout, net_init, name1, name2):
     fc = tf.compat.v1.layers.dense(x, nb_nodes, activation=tf.nn.tanh, use_bias=True,
                          kernel_initializer=net_init, name=name1,
                           reuse=tf.compat.v1.AUTO_REUSE)
-    fc = tf.compat.v1.layers.batch_normalization(fc, name = name2, reuse=tf.compat.v1.AUTO_REUSE)
-    fc = tf.compat.v1.layers.dropout(fc, rate = dropout)
+    fc = tf.compat.v1.layers.batch_normalization(fc, name=name2, reuse=tf.compat.v1.AUTO_REUSE)
+    fc = tf.compat.v1.layers.dropout(fc, rate=dropout)
     return fc
 
 def conv1d(x, conv_nb, conv_size, net_init, name1, name2):
@@ -24,7 +22,7 @@ def conv1d(x, conv_nb, conv_size, net_init, name1, name2):
     # conv = tf.compat.v1.layers.separable_conv1d(x, conv_nb, conv_size, padding='SAME',
     #                         activation=tf.nn.softplus,
     #                         name= name1, reuse=tf.compat.v1.AUTO_REUSE)
-    conv = tf.compat.v1.layers.batch_normalization(conv, name = name2, reuse=tf.compat.v1.AUTO_REUSE)
+    conv = tf.compat.v1.layers.batch_normalization(conv, name =name2, reuse=tf.compat.v1.AUTO_REUSE)
     # conv = tf.map_fn(tf.image.per_image_standardization, conv)
     return conv
 
@@ -32,7 +30,7 @@ def conv2d_norm(x, conv_nb, conv_size, strides, net_init, name, name2):
     conv = tf.compat.v1.layers.conv2d(x, conv_nb, [conv_size, conv_size], padding='SAME', strides=strides,
                             activation=tf.nn.elu, kernel_initializer=net_init,
                             name=name, reuse=tf.compat.v1.AUTO_REUSE)
-    conv = tf.compat.v1.layers.batch_normalization(conv, name = name2, reuse=tf.compat.v1.AUTO_REUSE)
+    conv = tf.compat.v1.layers.batch_normalization(conv, name=name2, reuse=tf.compat.v1.AUTO_REUSE)
     # conv = tf.map_fn(tf.image.per_image_standardization, conv)
     return conv
 #
@@ -44,20 +42,19 @@ def dconv2d_norm(x, conv_nb, conv_size, strides, net_init, name, name2):
                                       strides=strides,
                                       activation=tf.nn.elu, kernel_initializer=net_init, name=name,
                                       reuse=tf.compat.v1.AUTO_REUSE)
-    conv = tf.compat.v1.layers.batch_normalization(conv, name= name2, reuse=tf.compat.v1.AUTO_REUSE)
+    conv = tf.compat.v1.layers.batch_normalization(conv, name=name2, reuse=tf.compat.v1.AUTO_REUSE)
     # conv = tf.map_fn(tf.image.per_image_standardization, conv)
     return conv
 
 
 
 
-def mdnn_net(inputs, conv_nb, conv_size, dropout, px, reuse = False):
+def mdnn_net(inputs, conv_nb, conv_size, dropout, px, reuse=False):
     # print inputs.dtype
     size_fc = px ** 2
     with tf.compat.v1.variable_scope('generator', reuse=reuse):
         # net_init = tf.contrib.layers.variance_scaling_initializer()
         net_init = tf.compat.v1.keras.initializers.VarianceScaling()
-
         fc = tf.compat.v1.layers.flatten(inputs)
         fc = dense_norm(fc, 128, dropout, net_init, 'fc1', 'bn1')
         fc = dense_norm(fc, 128, dropout,  net_init,'fc1a', 'bn1a')
@@ -96,7 +93,6 @@ def filter_net(inputs, conv_nb, conv_size, dropout, px, reuse = False):
         fc1c = dense_norm(fc1a, size_fc, dropout, net_init, 'fc4a', 'bn4a')
         conv3 = tf.reshape(fc1c, shape=[-1, px//4, px//4, 1])
 
-
         conv3 = dconv2d_norm(conv3, conv_nb*2, conv_size, (1, 1), net_init, 'conv3', 'bnconv3')
 
         conv3a = dconv2d_norm(conv3, conv_nb*2, conv_size, (2, 2), net_init, 'conv3a', 'bnconv3a')
@@ -121,14 +117,12 @@ def conv1d_net(inputs, reuse = False):
         conv1 = conv1d(inputs, nang, 3, net_init, 'conv1', 'bnconv1')
         conv2 = conv1d(conv1, nang, 5, net_init, 'conv2', 'bnconv2')
 
-
         conv3 = conv1d(conv2, nang, 7, net_init, 'conv3', 'bnconv3')
         conv4 = conv1d(conv3, nang, 5, net_init, 'conv4', 'bnconv4')
         conv5 = conv1d(conv4, px, 3, net_init,  'conv5', 'bnconv5')
         conv6 = conv1d(conv5, px, 3, net_init,  'conv6', 'bnconv6')
 
         return conv6
-
 
 def discriminator(x, reuse = False, conv_nb = 32, conv_size = 3, dropout = 0.25):
     with tf.compat.v1.variable_scope('discriminator', reuse = reuse):
@@ -169,9 +163,7 @@ def tomo_bp(sinoi, ang):
     bp = tf.reduce_mean(prj, 0)
     bp = tf.image.per_image_standardization(bp)
     bp = tf.reshape(bp, [1, bp.shape[0], bp.shape[1], bp.shape[2]])
-
     return bp
-
 
 def tomo_radon(rec, ang):
     nang = ang.shape[0]
@@ -183,7 +175,6 @@ def tomo_radon(rec, ang):
     sino = tf.transpose(sino, [2, 0, 1])
     sino = tf.reshape(sino, [sino.shape[0], sino.shape[1], sino.shape[2], 1])
     return sino
-
 
 def tomo_learn(sinoi, ang, px, reuse, conv_nb, conv_size, dropout, method):
     if method == 'backproj':
@@ -240,10 +231,10 @@ def rec_dcgan_back(prj, ang, save_wpath, init_wpath = None, **kwargs):
     img_input = tf.placeholder(tf.float32, prj.shape)
     img_output = tf.placeholder(tf.float32, prj.shape)
 
-    pred, recon = tomo_learn(img_input, ang, px, reuse=False, conv_nb = kwargs['conv_nb'],
-                             conv_size = kwargs['conv_size'],
-                             dropout = kwargs['dropout'],
-                             method = kwargs['method']
+    pred, recon = tomo_learn(img_input, ang, px, reuse=False, conv_nb=kwargs['conv_nb'],
+                             conv_size=kwargs['conv_size'],
+                             dropout=kwargs['dropout'],
+                             method=kwargs['method']
                              )
     disc_real = discriminator(img_output)
     disc_fake = discriminator(pred, reuse=True)
@@ -313,6 +304,7 @@ def rec_dcgan_back(prj, ang, save_wpath, init_wpath = None, **kwargs):
     return recon
 
 def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
+    global g_loss
     ops.reset_default_graph()
     tf.compat.v1.disable_eager_execution()
     cnn_kwargs = ['learning_rate', 'num_steps', 'display_step', 'conv_nb', 'conv_size',
@@ -440,8 +432,6 @@ def rec_dcgan(prj, ang, save_wpath, init_wpath = None, **kwargs):
         saver.save(sess, save_wpath)
         if rec_tmp.shape[0] >1:
             recon = tf.reduce_mean(rec_tmp, axis=0).eval()
-
-
         # print(recon.shape)
     return recon
 
@@ -465,16 +455,11 @@ def rec_cost(prj, ang, save_wpath, log_path, init_wpath = None, **kwargs):
                                  conv_size=kwargs['conv_size'],
                                  dropout=kwargs['dropout'],
                                  method=kwargs['method'])
-
     with tf.name_scope('Loss'):
         loss_op = cost_mse(Y, pred)
-
     with tf.name_scope('Adam'):
         optimizer = tf.train.AdamOptimizer(learning_rate=kwargs['learning_rate'])
-
-
     train_op = optimizer.minimize(loss_op)
-
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
     #Creat a summary to monitor cost tensor
@@ -506,8 +491,6 @@ def rec_cost(prj, ang, save_wpath, log_path, init_wpath = None, **kwargs):
                                                   conv_size=kwargs['conv_size'],
                                                   dropout=kwargs['dropout'],
                                                   method=kwargs['method']))
-
-
                 sino_plt = np.reshape(pred, (nang, px))
                 rec_plt = np.reshape(recon, (px, px))
                 #
