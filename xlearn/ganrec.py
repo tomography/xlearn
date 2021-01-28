@@ -517,7 +517,7 @@ def _get_tomolearn_kwargs():
         'weights_init': False,
         'method': 'backproj',
         'cost_rate':100,
-        'gl_tol': 1.0,
+        'gl_tol': 1e-6,
         'iter_plot': True
     }
 
