@@ -237,6 +237,9 @@ latex_documents = [
   Affiliation,'manual'),
 ]
 
+
+bibtex_bibfiles = ['./source/bibtex/cite.bib', './source/bibtex/ref.bib']
+
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None
@@ -343,10 +346,10 @@ MOCK_MODULES = ['numpy',
                 'keras.utils.visualize_util',
                 'tensorflow',
                 'tensorflow.python',
-                'tensorflow.python.keras',
-                'tensorflow.python.keras.models',
-                'tensorflow.python.keras.layers',
-                'tensorflow.python.keras.utils']
+                'tensorflow.keras',
+                'tensorflow.keras.models',
+                'tensorflow.keras.layers',
+                'tensorflow.keras.utils']
 
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
