@@ -6,6 +6,13 @@ from xlearn.models import make_generator, make_discriminator, make_filter
 from xlearn.utils import RECONmonitor
 
 
+__authors__ = "Xiaogang Yang"
+__copyright__ = "Copyright (c) 2022, Brookhaven National Laboratory & DESY"
+__version__ = "0.3.0"
+__docformat__ = "restructuredtext en"
+__all__ = ['GANtomo',
+           'GANrec']
+
 # @tf.function
 def discriminator_loss(real_output, fake_output):
     real_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=real_output,
@@ -250,6 +257,52 @@ class GANrec:
 
 
 class GANtomo:
+    """
+    Function description.
+
+    Parameters
+    ----------
+    prj_input: array, 2D
+        Input sinogram for reconstruction.
+
+    angle: array, 2D
+        Tomographic scanning angles for reconstruction.
+
+    iter_num: int
+       Iteration number of reconstruction.
+
+    conv_num: int
+          Number of the covolutional kernals for the first layer. Default value is 32.
+
+    conv_size: int
+          Size of the convolutional kernals. Default value is 3.
+
+    dropout: int
+         dropout for fully connected layers. Default value is 0.25
+
+    l1: int
+          Ratio of l1 loss adding to gan loss. Default value is 100.
+
+    g_learning_rate: float
+          Learning rate of the generator. Default value is 1e-3
+
+    d_learning_rate: float
+          Learning rate of the discriminator. Default value is 1e-5
+
+    save_wpath: strings
+          The file nane and path of saving the trained weights after reconstruction.
+
+    init_wpath: strings
+          The file nane and path of initial weights for reconstruction.
+    recon_monitor: bool
+          Turn on or off the convergence plot for the reconstruction.
+
+
+    Returns
+    -------
+    2D array
+        The tomographic reconstruction result.
+    """
     def __init__(self, prj_input, angle, **kwargs):
         tomo_args = _get_GANtomo_kwargs()
         tomo_args.update(**kwargs)
