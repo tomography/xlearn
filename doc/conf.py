@@ -69,8 +69,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-Affiliation = u'Argonne National Laboratory'
-project = u'Xlearn'
+Affiliation = u'Brookhaven National Laboratory'
+project = u'xlearn'
 copyright = u'2016, ' + Affiliation
 
 # The version info for the project you're documenting, acts as replacement for
@@ -303,56 +303,56 @@ texinfo_documents = [
 #ztexinfo_no_detailmenu = False
 
 # picked from http://read-the-docs.readthedocs.org/en/latest/faq.html
-# class Mock(object):
-#
-#     __all__ = []
-#
-#     def __init__(self, *args, **kwargs):
-#         pass
-#
-#     def __call__(self, *args, **kwargs):
-#         return Mock()
-#
-#     @classmethod
-#     def __getattr__(cls, name):
-#         return Mock()
-#     def __mul__(self, other):
-#         return Mock()
-#     def __rmul__(self, other):
-#         return Mock()
-#     def __pow__(self, other):
-#         return Mock()
-#     def __div__(self, other):
-#         return Mock()
-#     def __add__(self, other):
-#         return Mock()
-#     def __radd__(self, other):
-#         return Mock()
-#
-# MOCK_MODULES = ['numpy',
-#                 'numpy.lib',
-#                 'numpy.lib.stride_tricks',
-#                 'scipy',
-#                 'matplotlib',
-#                 'matplotlib.pyplot',
-#                 'dxchange',
-#                 'keras',
-#                 'keras.datasets',
-#                 'keras.models',
-#                 'keras.layers',
-#                 'keras.layers.core',
-#                 'keras.layers.convolutional',
-#                 'keras.utils',
-#                 'keras.utils.visualize_util',
-#                 'tensorflow',
-#                 'tensorflow_addon',
-#                 'tensorflow.keras.models.layers'
-#                 'tensorflow.keras.models.Input'
-#                 'tensorflow.keras.models.optimizers']
-#                 # 'tensorflow.keras.models',
-#                 # 'tensorflow.keras.layers',
-#                 # 'tensorflow.keras.utils']
-#
-# for mod_name in MOCK_MODULES:
-#     sys.modules[mod_name] = Mock()
-#
+class Mock(object):
+
+    __all__ = []
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        return Mock()
+
+    @classmethod
+    def __getattr__(cls, name):
+        return Mock()
+    def __mul__(self, other):
+        return Mock()
+    def __rmul__(self, other):
+        return Mock()
+    def __pow__(self, other):
+        return Mock()
+    def __div__(self, other):
+        return Mock()
+    def __add__(self, other):
+        return Mock()
+    def __radd__(self, other):
+        return Mock()
+
+MOCK_MODULES = ['numpy',
+                'numpy.lib',
+                'numpy.lib.stride_tricks',
+                'scipy',
+                'matplotlib',
+                'matplotlib.pyplot',
+                'dxchange',
+                'keras',
+                'keras.datasets',
+                'keras.models',
+                'keras.layers',
+                'keras.layers.core',
+                'keras.layers.convolutional',
+                'keras.utils',
+                'keras.utils.visualize_util',
+                'tensorflow',
+                'tensorflow_addon',
+                'tensorflow.keras.models.layers'
+                'tensorflow.keras.models.Input'
+                'tensorflow.keras.models.optimizers']
+                # 'tensorflow.keras.models',
+                # 'tensorflow.keras.layers',
+                # 'tensorflow.keras.utils']
+
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = Mock()
+

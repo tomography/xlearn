@@ -262,7 +262,7 @@ class GANrec:
 
 class GANtomo:
     """
-    Function description.
+    Tomographic reconstruction with GANrec algorithm.
 
     Parameters
     ----------
