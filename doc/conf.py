@@ -346,10 +346,10 @@ MOCK_MODULES = ['numpy',
                 'tensorflow_addon',
                 'tensorflow.keras.layers'
                 'tensorflow.keras.Input'
-                'tensorflow.keras.optimizers']
-                # 'tensorflow.keras.models',
-                # 'tensorflow.keras.layers',
-                # 'tensorflow.keras.utils']
+                'tensorflow.keras.optimizers',
+                'tensorflow.keras.models',
+                'tensorflow.keras.layers',
+                'tensorflow.keras.utils']
 
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
