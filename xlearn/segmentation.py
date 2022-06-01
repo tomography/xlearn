@@ -51,7 +51,7 @@ Module containing model_choose, seg_train and seg_predict routines
 import numpy as np
 import tensorflow as tf
 import time
-from skimage import io
+# from skimage import io
 import dxchange
 from xlearn.utils import nor_data, extract_3d, reconstruct_patches
 from xlearn.models import transformer2, transformer3_pooling
