@@ -328,7 +328,6 @@ class Mock(object):
         return Mock()
 
 MOCK_MODULES = ['numpy',
-                'time',
                 'numpy.lib',
                 'numpy.lib.stride_tricks',
                 'scipy',
