@@ -328,6 +328,7 @@ class Mock(object):
         return Mock()
 
 MOCK_MODULES = ['numpy',
+                'time',
                 'numpy.lib',
                 'numpy.lib.stride_tricks',
                 'scipy',
@@ -344,8 +345,8 @@ MOCK_MODULES = ['numpy',
                 'keras.utils.visualize_util',
                 'tensorflow',
                 'tensorflow_addon',
-                'tensorflow.keras.layers'
-                'tensorflow.keras.Input'
+                'tensorflow.keras.layers',
+                'tensorflow.keras.Input',
                 'tensorflow.keras.optimizers',
                 'tensorflow.keras.models',
                 'tensorflow.keras.layers',
