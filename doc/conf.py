@@ -30,9 +30,6 @@ sys.path.insert(0, os.path.abspath('..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'nbsphinx',
-#    'IPython.sphinxext.ipython_console_highlighting',
-#    'IPython.sphinxext.ipython_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
@@ -42,6 +39,7 @@ extensions = [
     'sphinx.ext.viewcode']
 
 
+# Napoleon settings
 # Napoleon settings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
@@ -69,8 +67,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-Affiliation = u'Argonne National Laboratory'
-project = u'Xlearn'
+Affiliation = u'Brookhaven National Laboratory'
+project = u'xlearn'
 copyright = u'2016, ' + Affiliation
 
 # The version info for the project you're documenting, acts as replacement for
@@ -237,6 +235,9 @@ latex_documents = [
   Affiliation,'manual'),
 ]
 
+
+bibtex_bibfiles = ['./source/bibtex/cite.bib', './source/bibtex/ref.bib']
+
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None
@@ -284,7 +285,7 @@ texinfo_documents = [
   project+u' Documentation',
   Affiliation, 
   project, 
-  'Scientific Data Exchange'),
+  'Deep learning for Synchrotron X-ray Imaging'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -330,7 +331,7 @@ MOCK_MODULES = ['numpy',
                 'numpy.lib',
                 'numpy.lib.stride_tricks',
                 'scipy',
-                'matplotlib', 
+                'matplotlib',
                 'matplotlib.pyplot',
                 'dxchange',
                 'keras',
@@ -342,11 +343,13 @@ MOCK_MODULES = ['numpy',
                 'keras.utils',
                 'keras.utils.visualize_util',
                 'tensorflow',
-                'tensorflow.python',
-                'tensorflow.python.keras',
-                'tensorflow.python.keras.models',
-                'tensorflow.python.keras.layers',
-                'tensorflow.python.keras.utils']
+                'tensorflow_addon',
+                'tensorflow.keras.layers',
+                'tensorflow.keras.Input',
+                'tensorflow.keras.optimizers',
+                'tensorflow.keras.models',
+                'tensorflow.keras.layers',
+                'tensorflow.keras.utils']
 
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()

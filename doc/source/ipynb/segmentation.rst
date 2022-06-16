@@ -3,8 +3,8 @@ Transform
 
 .. toctree::
 
-   transform_train.rst
-   transform_predict.rst
+   segmentation_train.rst
+   segmentation_predict.rst
 
 .. automodule:: xlearn
    :members:

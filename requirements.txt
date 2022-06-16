@@ -1,6 +1,6 @@
 numpy
 tifffile
-tensorflow==2.7.0
+tensorflow==2.7.2
 keras
 scipy
 scikit-image

@@ -2,12 +2,12 @@
 Xlearn
 ======
 
-.. image:: source/img/xlearn-logo.png
+.. image:: source/img/xlearn.png
    :width: 640px
    :alt: xlearn
 
 
-`Xlearn <https://github.com/tomography/xlearn>`_ is an open-source Python package implementing Convolutional Neural Networks (CNN) for X-ray Science.
+`Xlearn <https://github.com/tomography/xlearn>`_ is an open-source Python package implementing Deep Learning for X-ray Science.
 
 Features
 --------
