@@ -95,7 +95,7 @@ def model(dim_img, nb_filters, nb_conv, nb_classes):
 
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv,
                             border_mode='valid',
-                            input_shape=(1, dim_img, dim_img)))
+                            input_shape=(dim_img, dim_img, 1)))
     mdl.add(Activation('relu'))
     mdl.add(Convolution2D(nb_filters, nb_conv, nb_conv))
     mdl.add(Activation('relu'))
@@ -146,7 +146,7 @@ def train(x_train, y_train, x_test, y_test, dim_img, nb_filters, nb_conv, batch_
     mdl.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
             verbose=1, validation_data=(x_test, y_test))
     mdl.save_weights('weight_center.h5')
-    score = mdl.evaluate(x_test, y_test, show_accuracy=True, verbose=0)
+    score = mdl.evaluate(x_test, y_test, verbose=0)
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
     return mdl

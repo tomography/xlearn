@@ -52,10 +52,12 @@ Module containing model, predict and train routines
 
 from __future__ import print_function
 import tensorflow as tf
-from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Reshape, Flatten, \
+from tensorflow.keras import layers, Input, optimizers
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Reshape, Flatten, \
     Dropout, Input, concatenate, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
-from tensorflow.python.keras.utils import multi_gpu_model
+
+# from tensorflow.python.keras.utils import multi_gpu_model
 
 # from keras.models import Sequential, Model
 # from keras.layers import Dense, Reshape, Flatten, \
@@ -64,7 +66,7 @@ from tensorflow.python.keras.utils import multi_gpu_model
 
 __authors__ = "Xiaogang Yang, Francesco De Carlo"
 __copyright__ = "Copyright (c) 2016, Argonne National Laboratory"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __docformat__ = "restructuredtext en"
 __all__ = ['classifier',
            'transformer2',
@@ -122,7 +124,7 @@ def classifier(ih, iw, nb_conv, size_conv, nb_classes):
     return mdl
 
 
-def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
+def transformer2(ih, iw, nb_conv, size_conv, lr):
     """
     The simple cnn model for image transformation with 2 times of downsampling. It is a choice for fast running.
     However, it will lose resolution during the transformation.
@@ -158,7 +160,7 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     #
     fc1 = Flatten()(conv3)
     fc1 = Dense(iw * ih / 16)(fc1)
-    fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
+    fc1 = Reshape((ih // 4, iw // 4, 1))(fc1)
 
     conv4 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
 
@@ -175,14 +177,14 @@ def transformer2(ih, iw, nb_conv, size_conv, nb_gpu = 1):
     conv8 = Conv2DTranspose(1, (size_conv, size_conv), activation='relu', padding='same')(conv7)
 
     mdl = Model(inputs=inputs, outputs=conv8)
-    if nb_gpu > 1:
-        mdl = multi_gpu_model(mdl, nb_gpu)
-
-    mdl.compile(loss='mse', optimizer='Adam')
+    # if nb_gpu > 1:
+    #     mdl = multi_gpu_model(mdl, nb_gpu)
+    opt = optimizers.Adam(learning_rate=lr)
+    mdl.compile(loss='mse', optimizer=opt)
 
     return mdl
 
-def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
+def transformer3_pooling(ih, iw, nb_conv, size_conv, lr):
 
     """
     The cnn image transformation model with 3 times of downsampling. The downsampling uses maxpooling.
@@ -232,7 +234,7 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     fc1 = Dropout(0.25)(fc1)
     fc1 = Dense(iw * ih / 64, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((int(ih / 8), int(iw / 8), 1))(fc1)
+    fc1 = Reshape((int(ih // 8), int(iw // 8), 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), activation='relu', padding='same')(fc2)
@@ -255,10 +257,11 @@ def transformer3_pooling(ih, iw, nb_conv, size_conv, nb_gpu):
     conv8 = Conv2DTranspose(1, (3, 3), activation='relu', padding='same')(conv8)
 
     mdl = Model(inputs=inputs, outputs=conv8)
-    if nb_gpu > 1:
-        mdl = multi_gpu_model(mdl, nb_gpu)
+    # if nb_gpu > 1:
+    #     mdl = multi_gpu_model(mdl, nb_gpu)
 
-    mdl.compile(loss='mse', optimizer='Adam')
+    opt = optimizers.Adam(learning_rate=lr)
+    mdl.compile(loss='mse', optimizer=opt)
     return mdl
 
 
@@ -309,7 +312,7 @@ def transformer3_super(ih, iw, nb_conv, size_conv):
     fc1 = Dropout(0.25)(fc1)
     fc1 = Dense(iw * ih / 64, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((ih / 8, iw / 8, 1))(fc1)
+    fc1 = Reshape((ih // 8, iw // 8, 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 8, (size_conv, size_conv), trides=(2, 2), activation='relu', padding='same')(fc2)
@@ -378,7 +381,7 @@ def transformer3_direct(ih, iw, nb_conv, size_conv):
     fc1 = Dropout(0.2)(fc1)
     fc1 = Dense(iw * ih / 16, activation='relu')(fc1)
     fc1 = Dropout(0.25)(fc1)
-    fc1 = Reshape((ih / 4, iw / 4, 1))(fc1)
+    fc1 = Reshape((ih // 4, iw // 4, 1))(fc1)
 
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv), activation='relu', padding='same')(fc1)
     fc2 = Conv2DTranspose(nb_conv * 4, (size_conv, size_conv),
@@ -475,3 +478,179 @@ def psnr(y_true, y_pred):
     The cost function by computing the psnr.
     """
     return 1/(10.0 * tf.log(1.0 / (tf.mean(tf.square(y_pred - y_true)))) / tf.log(10.0))
+
+
+def dense_norm(units, dropout, apply_batchnorm=True):
+    initializer = tf.random_normal_initializer()
+
+    result = tf.keras.Sequential()
+    result.add(
+        layers.Dense(units, activation=tf.nn.tanh, use_bias=True, kernel_initializer=initializer))
+    result.add(layers.Dropout(dropout))
+
+    if apply_batchnorm:
+        result.add(layers.BatchNormalization())
+
+    #     result.add(layers.LeakyReLU())
+
+    return result
+
+
+def conv2d_norm(filters, size, strides, apply_batchnorm=True):
+    initializer = tf.random_normal_initializer()
+
+    result = tf.keras.Sequential()
+    result.add(
+        layers.Conv2D(filters, size, strides=strides, padding='same',
+                      kernel_initializer=initializer, activation=tf.nn.elu))
+
+    if apply_batchnorm:
+        result.add(layers.BatchNormalization())
+
+    # result.add(layers.LeakyReLU())
+
+    return result
+
+
+def dconv2d_norm(filters, size, strides, apply_dropout=False):
+    initializer = tf.random_normal_initializer()
+
+    result = tf.keras.Sequential()
+    result.add(
+        layers.Conv2DTranspose(filters, size, strides=strides,
+                               padding='same',
+                               kernel_initializer=initializer,
+                               use_bias=False))
+
+    result.add(tf.keras.layers.BatchNormalization())
+
+    if apply_dropout:
+        result.add(tf.keras.layers.Dropout(0.5))
+
+    result.add(tf.keras.layers.ReLU())
+
+    return result
+
+
+def make_generator(img_h, img_w, conv_num, conv_size, dropout, output_num):
+    units = 128
+    fc_size = img_w ** 2
+    inputs = Input(shape=(img_h, img_w, 1))
+    x = tf.keras.layers.Flatten()(inputs)
+    fc_stack = [
+        dense_norm(units, dropout),
+        dense_norm(units, dropout),
+        dense_norm(units, dropout),
+        dense_norm(fc_size, 0),
+    ]
+
+    conv_stack = [
+        conv2d_norm(conv_num, conv_size+2, 1),
+        conv2d_norm(conv_num, conv_size+2, 1),
+        conv2d_norm(conv_num, conv_size, 1),
+
+    ]
+
+    dconv_stack = [
+        dconv2d_norm(conv_num, conv_size+2, 1),
+        dconv2d_norm(conv_num, conv_size+2, 1),
+        dconv2d_norm(conv_num, conv_size, 1),
+    ]
+
+    last = conv2d_norm(output_num, 3, 1)
+
+    for fc in fc_stack:
+        x = fc(x)
+
+    x = tf.reshape(x, shape=[-1, img_w, img_w, 1])
+    # Convolutions
+    for conv in conv_stack:
+        x = conv(x)
+
+    for dconv in dconv_stack:
+        x = dconv(x)
+    x = last(x)
+
+    return tf.keras.Model(inputs=inputs, outputs=x)
+
+
+def make_filter(img_h, img_w):
+    inputs = Input(shape=[img_h, img_w, 1])
+    down_stack = [
+        conv2d_norm(16, 3, 1),  # (batch_size, 128, 128, 64)
+        conv2d_norm(16, 3, 1),
+        # conv2d_norm(16, 3, 1),
+        # conv2d_norm(128, 4, 2),  # (batch_size, 64, 64, 128)
+        # conv2d_norm(256, 4, 2),  # (batch_size, 32, 32, 256)
+        # conv2d_norm(512, 4, 2),  # (batch_size, 16, 16, 512)
+        # conv2d_norm(512, 4, 2),  # (batch_size, 8, 8, 512)
+        # conv2d_norm(512, 4, 2),  # (batch_size, 4, 4, 512)
+        # conv2d_norm(512, 4, 2),  # (batch_size, 2, 2, 512)
+        # conv2d_norm(512, 4, 2),  # (batch_size, 1, 1, 512)
+    ]
+
+    up_stack = [
+        # dconv2d_norm(512, 4, 2, apply_dropout=True),  # (batch_size, 2, 2, 1024)
+        # dconv2d_norm(512, 4, 2, apply_dropout=True),  # (batch_size, 4, 4, 1024)
+        # dconv2d_norm(512, 4, 2, apply_dropout=True),  # (batch_size, 8, 8, 1024)
+        # dconv2d_norm(512, 4, 2),  # (batch_size, 16, 16, 1024)
+        # dconv2d_norm(256, 4, 2),  # (batch_size, 32, 32, 512)
+        # dconv2d_norm(128, 4, 2),  # (batch_size, 64, 64, 256)
+        dconv2d_norm(16, 3, 1),  # (batch_size, 128, 128, 128)
+        dconv2d_norm(16, 3, 1)
+    ]
+    last = conv2d_norm(1, 3, 1)
+    # initializer = tf.random_normal_initializer(0., 0.02)
+    # last = tf.keras.layers.Conv2DTranspose(1, 3,
+    #                                        strides=1,
+    #                                        padding='same',
+    #                                        kernel_initializer=initializer,
+    #                                        activation='tanh')  # (batch_size, 256, 256, 3)
+
+    x = inputs
+
+    # Downsampling through the model
+    skips = []
+    for down in down_stack:
+        x = down(x)
+        skips.append(x)
+
+    skips = reversed(skips[:-1])
+
+    # Upsampling and establishing the skip connections
+    for up, skip in zip(up_stack, skips):
+        x = up(x)
+        # x = tf.keras.layers.Concatenate()([x, skip])
+
+    x = last(x)
+
+    return tf.keras.Model(inputs=inputs, outputs=x)
+
+
+def make_discriminator(nang, px):
+    model = tf.keras.Sequential()
+    model.add(layers.Conv2D(16, (5, 5), strides=(2, 2), padding='same',
+                            input_shape=[nang, px, 1]))
+    model.add(layers.Conv2D(16, (5, 5), strides=(1, 1), padding='same'))
+    model.add(layers.LeakyReLU())
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Conv2D(32, (5, 5), strides=(2, 2), padding='same'))
+    # model.add(layers.Conv2D(32, (5, 5), strides=(1, 1), padding='same'))
+    model.add(layers.LeakyReLU())
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
+    # model.add(layers.Conv2D(64, (3, 3), strides=(1, 1), padding='same'))
+    model.add(layers.LeakyReLU())
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Conv2D(64, (3, 3), strides=(2, 2), padding='same'))
+    # model.add(layers.Conv2D(64, (3, 3), strides=(1, 1), padding='same'))
+    model.add(layers.LeakyReLU())
+    model.add(layers.Dropout(0.2))
+
+    model.add(layers.Flatten())
+    model.add(layers.Dense(1))
+
+    return model

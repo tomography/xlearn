@@ -13,6 +13,6 @@ scripts from `here <https://github.com/tomography/xlearn/tree/master/doc/demo>`_
 
 .. toctree::
 
-   ipynb/transform.rst
+   ipynb/segmentation.rst
    ipynb/rotation.rst
 

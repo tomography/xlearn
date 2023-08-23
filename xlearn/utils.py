@@ -52,10 +52,11 @@ import numpy as np
 from itertools import product
 import numbers
 from numpy.lib.stride_tricks import as_strided
+import matplotlib.pyplot as plt
 
 __authors__ = "Xiaogang Yang"
 __copyright__ = "Copyright (c) 2018, Argonne National Laboratory"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __docformat__ = "restructuredtext en"
 
 
@@ -80,6 +81,13 @@ def nor_data(img):
 
     return img
 
+def nor_prj(img):
+    mean_sum = np.mean(np.sum(img, axis=1))
+    data_corr = np.zeros_like(img)
+    for i in range(len(img)):
+        data_corr[i, :] = img[i, :] * mean_sum / np.sum(img[i, :])
+    return data_corr
+
 
 def mlog(img):
     img = nor_data(img)
@@ -103,7 +111,8 @@ def rescale_intensity(img):
     img = 255*(img-img.min())/(img.max()-img.min())
     return img
 
-
+def angles(nang, ang1=0., ang2=180.):
+    return np.linspace(ang1 * np.pi / 180., ang2 * np.pi / 180., nang)
 
 
 def check_random_state(seed):
@@ -404,4 +413,63 @@ def extract_3d(img, patch_size, step):
             patches = np.concatenate((patches, patches_tmp), axis=0)
     return patches
 
+def center(prj, cen):
+    if prj.ndim == 3:
+        _, _, px = prj.shape
+        cen_diff = px // 2 - cen
+        if cen_diff > 0:
+            prj = prj[:, :, :-cen_diff * 2]
+        if cen_diff < 0:
+            prj = prj[:, :, -cen_diff * 2:]
+        prj = np.pad(prj, ((0, 0,), (0, 0), (np.abs(cen_diff), np.abs(cen_diff))), 'constant')
+    else:
+        _, px = prj.shape
+        cen_diff = px // 2 - cen
+        if cen_diff > 0:
+            prj = prj[:, :-cen_diff * 2]
+        if cen_diff < 0:
+            prj = prj[:, -cen_diff * 2:]
+        prj = np.pad(prj, ((0, 0), (np.abs(cen_diff), np.abs(cen_diff))), 'constant')
+    return prj
 
+
+class RECONmonitor:
+    def __init__(self, recon_target):
+        self.fig, self.axs = plt.subplots(2, 2, figsize=(12, 6))
+        self.recon_target = recon_target
+        if self.recon_target == 'tomo':
+            self.plot_txt = 'Sinogram'
+        elif self.recon_target == 'phase':
+            self.plot_txt = 'Intensity'
+
+    def initial_plot(self, img_input):
+        _, px = img_input.shape
+        self.im0 = self.axs[0, 0].imshow(img_input, cmap='gray')
+        self.axs[0, 0].set_title(self.plot_txt)
+        self.fig.colorbar(self.im0, ax=self.axs[0, 0])
+        self.axs[0, 0].set_aspect('equal','box')
+        self.im1 = self.axs[1, 0].imshow(img_input, cmap='jet')
+        self.tx1 = self.axs[1, 0].set_title('Difference of ' + self.plot_txt + ' for iteration 0')
+        self.fig.colorbar(self.im1, ax=self.axs[1, 0])
+        self.axs[1, 0].set_aspect('equal')
+        self.im2 = self.axs[0, 1].imshow(np.zeros((px, px)), cmap='gray')
+        self.fig.colorbar(self.im2, ax=self.axs[0, 1])
+        self.axs[0, 1].set_title('Reconstruction')
+        self.im3, = self.axs[1, 1].plot([], [], 'r-')
+        self.axs[1, 1].set_title('Generator loss')
+        plt.tight_layout()
+
+    def update_plot(self, epoch, img_diff, img_rec, plot_x, plot_loss):
+        self.tx1.set_text('Difference of ' + self.plot_txt + ' for iteration {0}'.format(epoch))
+        vmax = np.max(img_diff)
+        vmin = np.min(img_diff)
+        self.im1.set_data(img_diff)
+        self.im1.set_clim(vmin, vmax)
+        self.im2.set_data(img_rec)
+        vmax = np.max(img_rec)
+        vmin = np.min(img_rec)
+        self.im2.set_clim(vmin, vmax)
+        self.axs[1, 1].plot(plot_x, plot_loss, 'r-')
+        self.fig.canvas.draw_idle()
+        # plt.tight_layout()
+        plt.pause(0.1)

@@ -13,7 +13,7 @@ X-ray science imaging problems including:
 
 * Super-resolution X-ray microscopy (will update later).
 
-* Solving inverse problems with deep learning, such as tomography reconstruction and phase retrieval (will update late).
+* Solving inverse problems with deep learning, such as tomography reconstruction :cite:`RN85` and phase retrieval.
 
 
 
