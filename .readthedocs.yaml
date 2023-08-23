@@ -1,0 +1,15 @@
+# .readthedocs.yml
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+version: 2
+sphinx:
+  configuration: doc/conf.py
+python:
+  install:
+    - requirements: envs/requirements-doc.txt
+submodules:
+  recursive: false
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3"
